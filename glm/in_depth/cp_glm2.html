@@ -1,0 +1,405 @@
+<html xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   
+      <!--
+This HTML is auto-generated from an M-file.
+To make changes, update the M-file and republish this document.
+      -->
+      <title>Cyril Pernet GLM </title>
+      <meta name="description" content="Doing ANOVAs using the GLM">
+      <meta name="keywords" content="Cyril Pernet GLM ANOVA">
+      <meta name="generator" content="MATLAB 7.2">
+      <meta name="date" content="2008-03-16">
+      <meta name="m-file" content="cp_glm2"><style>
+
+body {
+  background-color: white;
+  margin:10px;
+}
+
+h1 {
+  color: #990000; 
+  font-size: x-large;
+}
+
+h2 {
+  color: #990000;
+  font-size: medium;
+}
+
+/* Make the text shrink to fit narrow windows, but not stretch too far in 
+wide windows.  On Gecko-based browsers, the shrink-to-fit doesn't work. */ 
+p,h1,h2,div.content div {
+  /* for MATLAB's browser */
+  width: 600px;
+  /* for Mozilla, but the "width" tag overrides it anyway */
+  max-width: 600px;
+  /* for IE */
+  width:expression(document.body.clientWidth > 620 ? "600px": "auto" );
+}
+
+pre.codeinput {
+  background: #EEEEEE;
+  padding: 10px;
+}
+@media print {
+  pre.codeinput {word-wrap:break-word; width:100%;}
+} 
+
+span.keyword {color: #0000FF}
+span.comment {color: #228B22}
+span.string {color: #A020F0}
+span.untermstring {color: #B20000}
+span.syscmd {color: #B28C00}
+
+pre.codeoutput {
+  color: #666666;
+  padding: 10px;
+}
+
+pre.error {
+  color: red;
+}
+
+p.footer {
+  text-align: right;
+  font-size: xx-small;
+  font-weight: lighter;
+  font-style: italic;
+  color: gray;
+}
+
+  </style></head>
+   <body>
+      <div class="content">
+         <h2>Contents</h2>
+         <div>
+            <ul>
+               <li><a href="../cp_stats.html">Home</a></li>
+               <li><a href="#2">Theory</a></li>
+               <li><a href="#3">Sum Square equations</a></li>
+               <li><a href="#4">Matrix solution</a></li>
+               <li><a href="#5">Summary</a></li>
+               <li><a href="cp_glm3.html">GLM3</a></li>
+            </ul>
+        </div><pre class="codeinput"><span class="comment">% Now that we have seen how to solve a multiple regression,</span>
+<span class="comment">% I will show how an ANOVA can be solved just the same way</span>
+
+clc
+clear <span class="string">all</span>
+close <span class="string">all</span>
+</pre><h2>Theory<a name="2"></a></h2><pre class="codeinput"><span class="comment">% first a little reminder on why this is an analysis of variance</span>
+<span class="comment">% even though we are a priori interested in knowing if the mean</span>
+<span class="comment">% values between 2 or more groups are different</span>
+<span class="comment">% remember as well that variance = sum(x-mean(x)).^2 / N-1</span>
+<span class="comment">%                                = sum of squares / N-1</span>
+<span class="comment">%</span>
+<span class="comment">% Consider the following data set:</span>
+<span class="comment">%</span>
+<span class="comment">% --------------------------------------------------</span>
+<span class="comment">%                           gp 1   gp2   gp3   gp4</span>
+<span class="comment">% --------------------------------------------------</span>
+<span class="comment">% observation 1               8     5     3     6</span>
+<span class="comment">% observation 2               9     7     4     4</span>
+<span class="comment">% observation 3               7     3     1     9</span>
+<span class="comment">% --------------------------------------------------</span>
+<span class="comment">%      means                  8     5    2.66   6.33</span>
+<span class="comment">% sum of squares              2     8    4.66  12.66  --&gt; sum = 27.33</span>
+<span class="comment">% --------------------------------------------------</span>
+<span class="comment">% overall mean                        5.5</span>
+<span class="comment">% overall sum of squares               73</span>
+<span class="comment">% --------------------------------------------------</span>
+<span class="comment">%</span>
+<span class="comment">% Adding the some squares of each group gives 27.32.</span>
+<span class="comment">% Now repeating this computations, ignoring the group membership,</span>
+<span class="comment">% that is computing the total SS based on the overall mean,</span>
+<span class="comment">% we get the number 73. In other words, computing the</span>
+<span class="comment">% variance (sums of squares) based on the within-group variability</span>
+<span class="comment">% yields a much smaller estimate of variance than computing it based</span>
+<span class="comment">% on the total variability (the overall mean). The reason for this in</span>
+<span class="comment">% the above example is of course that there is a large difference between</span>
+<span class="comment">% means, and it is this difference that accounts for the difference in the SS.</span>
+</pre><h2>Sum Square equations<a name="3"></a></h2><pre class="codeinput"><span class="comment">%----------------------------------%</span>
+<span class="comment">%  SS total = SS intra + SS inter  %</span>
+<span class="comment">%           = SS groups + SS error %</span>
+<span class="comment">%----------------------------------%</span>
+<span class="comment">%</span>
+<span class="comment">% from the previous table we have</span>
+
+<span class="comment">% data</span>
+y = [8 9 7 5 7 3 3 4 1 6 4 9]';
+
+<span class="comment">% SS</span>
+SS_Total = sum((y-mean(y)).^2)
+SS_intra = sum((y(1:3)-mean(y(1:3))).^2) + <span class="keyword">...</span>
+    sum((y(4:6)-mean(y(4:6))).^2) + sum((y(7:9)-mean(y(7:9))).^2) + <span class="keyword">...</span>
+    sum((y(10:12)-mean(y(10:12))).^2)
+SS_inter = SS_Total - SS_intra
+
+<span class="comment">% the statistical test is as usual effect/error but adjusted by the dof</span>
+
+df_inter = 3;
+df_intra = length(y) - df_inter -1;
+F = ((SS_inter)/df_inter)/(SS_intra/df_intra);
+pval = 1 - fcdf(F, df_inter, df_intra);
+
+<span class="comment">% make the figure</span>
+boxplot([8 9 7 ;5 7 3 ;3 4 1 ;6 4 9]')
+mytitle = sprintf(<span class="string">'F(%g,%g)=%g, p=%g'</span>,df_inter, df_intra, F, pval);
+title([mytitle])
+</pre><pre class="codeoutput">
+SS_Total =
+
+    73
+
+
+SS_intra =
+
+   27.3333
+
+
+SS_inter =
+
+   45.6667
+
+</pre><img vspace="5" hspace="5" src="cp_glm2_01.png"> <h2>Matrix solution<a name="4"></a></h2><pre class="codeinput"><span class="comment">% definition of groups</span>
+<span class="comment">% first we have to describe the data with a set of</span>
+<span class="comment">% predictors as for the multiple regression</span>
+
+n = 3;
+X = [ones(1,n) zeros(1,3*n); <span class="keyword">...</span>
+       zeros(1,n) ones(1,n) zeros(1,2*n); <span class="keyword">...</span>
+       zeros(1,2*n) ones(1,n) zeros(1,n); <span class="keyword">...</span>
+       zeros(1,3*n) ones(1,n); ones(1,4*n)]';
+figure
+subplot(1,3,1); imagesc(X); colormap(<span class="string">'gray'</span>);
+title({<span class="string">'full design'</span>; <span class="string">'but rank deficient'</span>})
+
+<span class="comment">% however X is rank deficient, i.e. one can describe one column as a</span>
+<span class="comment">% linear combination of the others - geometrically speaking one should</span>
+<span class="comment">% be able to combine the vectors in X to go back to the origin 0.</span>
+<span class="comment">% Since one vector is a multiple of the other there is no way one can</span>
+<span class="comment">% do that, the matrix X has to be modified</span>
+
+X = [ones(1,n) zeros(1,2*n) (ones(1,n)*-1); <span class="keyword">...</span>
+       zeros(1,n) ones(1,n) zeros(1,n) (ones(1,n)*-1); <span class="keyword">...</span>
+       zeros(1,2*n) ones(1,n) (ones(1,n)*-1); ones(1,4*n)]';
+subplot(1,3,2); imagesc(X); colormap(<span class="string">'gray'</span>);
+title(<span class="string">'almost done'</span>)
+
+<span class="comment">% finally, since the fisrt column stands for cst we can take it out</span>
+
+X = [ones(1,n) zeros(1,2*n) (ones(1,n)*-1); <span class="keyword">...</span>
+       zeros(1,n) ones(1,n) zeros(1,n) (ones(1,n)*-1); <span class="keyword">...</span>
+       zeros(1,2*n) ones(1,n) (ones(1,n)*-1)]';
+subplot(1,3,3); imagesc(X); colormap(<span class="string">'gray'</span>);
+title(<span class="string">'final design'</span>)
+
+<span class="comment">% the solution of y=X*betas + cst + e is the same as for the multiple</span>
+<span class="comment">% regression betas = inv(X'*X)*X'*y; cst = mean(y) in this case;</span>
+<span class="comment">% model = X*betas + cst; but we can make things faster using the built</span>
+<span class="comment">% in function glmfit (part of the stat toolbox)</span>
+
+[betas, error, stats] = glmfit(X,y,<span class="string">'normal'</span>);
+yhat                  = glmval(betas, X, <span class="string">'identity'</span>); <span class="comment">% Yhat = model</span>
+error                 = y - yhat;
+
+<span class="comment">% then as for the multiple regression</span>
+ss_total  = norm(y - mean(y)).^2;
+ss_error  = norm(error).^2;
+Rsquare   = 1 - ss_error/ss_total; <span class="comment">% fitting statistic R2 = part of explained variance</span>
+F         = (Rsquare *(length(y)-rank(X)-1))/((1- Rsquare)*rank(X));
+pval      = 1 - fcdf(F, rank(X), (length(y)-rank(X)-1));
+
+<span class="comment">% make cool figures which tell us more than the basic ANOVA</span>
+figure;
+subplot(1,3,1);
+boxplot([8 9 7 ;5 7 3 ;3 4 1 ;6 4 9]');
+mytitle = sprintf(<span class="string">'F(%g,%g)=%g, p=%g'</span>,(length(y)-rank(X)-1), rank(X), F, pval);
+title([mytitle])
+subplot(1,3,2);
+plot(y); hold <span class="string">on</span>; plot(yhat,<span class="string">'r'</span>); axis <span class="string">tight</span>
+mytitle = sprintf(<span class="string">'R square = %g'</span>, Rsquare);
+title({<span class="string">'model and data'</span>;[mytitle]})
+subplot(1,3,3); normplot(error);
+</pre><img vspace="5" hspace="5" src="cp_glm2_02.png"> <img vspace="5" hspace="5" src="cp_glm2_03.png"> <h2>Summary<a name="5"></a></h2><pre class="codeinput"><span class="comment">% matlab functions</span>
+<span class="comment">% glmfit and glmval to solve the normal equations and get the model</span>
+<span class="comment">% norm and rank ; size of a vector and rank of a matrix (relates to dof)</span>
+<span class="comment">% [betas, error, stats] = glmfit(X,y,'normal');</span>
+<span class="comment">% yhat = glmval(betas, X, 'identity');</span>
+<span class="comment">% norm(y)</span>
+<span class="comment">% rank(X)</span>
+
+<span class="comment">% linear model</span>
+<span class="comment">% we have seens that one can express the groups by dummy variables (1,0,-1)</span>
+<span class="comment">% dummy coding specifies groups following the ANOVA equation</span>
+<span class="comment">% multiple regression and ANOVA are the same :-)</span>
+<span class="comment">% the error is the the difference between the data y and the predictions</span>
+<span class="comment">% yhat; while the ss of the effect is the sum of the square distances of</span>
+<span class="comment">% the prediction norm(yhat-mean(yhat)).^2</span>
+</pre><p class="footer"><br>
+            Published with MATLAB&reg; 7.2<br></p>
+      </div>
+      <!--
+##### SOURCE BEGIN #####
+% Now that we have seen how to solve a multiple regression,
+% I will show how an ANOVA can be solved just the same way
+
+clc
+clear all
+close all
+
+
+%% Theory
+
+% first a little reminder on why this is an analysis of variance
+% even though we are a priori interested in knowing if the mean
+% values between 2 or more groups are different
+% remember as well that variance = sum(x-mean(x)).^2 / N-1
+%                                = sum of squares / N-1
+%
+% Consider the following data set:
+% 
+% REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH
+%                           gp 1   gp2   gp3   gp4
+% REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH
+% observation 1               8     5     3     6
+% observation 2               9     7     4     4
+% observation 3               7     3     1     9
+% REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH
+%      means                  8     5    2.66   6.33
+% sum of squares              2     8    4.66  12.66  REPLACE_WITH_DASH_DASH> sum = 27.33
+% REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH
+% overall mean                        5.5
+% overall sum of squares               73
+% REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH
+%
+% Adding the some squares of each group gives 27.32. 
+% Now repeating this computations, ignoring the group membership,
+% that is computing the total SS based on the overall mean, 
+% we get the number 73. In other words, computing the 
+% variance (sums of squares) based on the within-group variability 
+% yields a much smaller estimate of variance than computing it based 
+% on the total variability (the overall mean). The reason for this in 
+% the above example is of course that there is a large difference between
+% means, and it is this difference that accounts for the difference in the SS. 
+
+%% Sum Square equations
+%
+%REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH%
+%  SS total = SS intra + SS inter  %
+%           = SS groups + SS error %
+%REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH%
+%
+% from the previous table we have
+
+% data
+y = [8 9 7 5 7 3 3 4 1 6 4 9]'; 
+
+% SS
+SS_Total = sum((y-mean(y)).^2) 
+SS_intra = sum((y(1:3)-mean(y(1:3))).^2) + ...
+    sum((y(4:6)-mean(y(4:6))).^2) + sum((y(7:9)-mean(y(7:9))).^2) + ...
+    sum((y(10:12)-mean(y(10:12))).^2)
+SS_inter = SS_Total - SS_intra
+
+% the statistical test is as usual effect/error but adjusted by the dof
+
+df_inter = 3;
+df_intra = length(y) - df_inter -1;
+F = ((SS_inter)/df_inter)/(SS_intra/df_intra);
+pval = 1 - fcdf(F, df_inter, df_intra);
+
+% make the figure
+boxplot([8 9 7 ;5 7 3 ;3 4 1 ;6 4 9]')
+mytitle = sprintf('F(%g,%g)=%g, p=%g',df_inter, df_intra, F, pval);
+title([mytitle])
+
+
+%% Matrix solution
+
+% definition of groups
+% first we have to describe the data with a set of 
+% predictors as for the multiple regression
+
+n = 3;
+X = [ones(1,n) zeros(1,3*n); ...
+       zeros(1,n) ones(1,n) zeros(1,2*n); ...
+       zeros(1,2*n) ones(1,n) zeros(1,n); ...
+       zeros(1,3*n) ones(1,n); ones(1,4*n)]';
+figure
+subplot(1,3,1); imagesc(X); colormap('gray');
+title({'full design'; 'but rank deficient'})
+
+% however X is rank deficient, i.e. one can describe one column as a 
+% linear combination of the others - geometrically speaking one should
+% be able to combine the vectors in X to go back to the origin 0.
+% Since one vector is a multiple of the other there is no way one can
+% do that, the matrix X has to be modified
+
+X = [ones(1,n) zeros(1,2*n) (ones(1,n)*-1); ...
+       zeros(1,n) ones(1,n) zeros(1,n) (ones(1,n)*-1); ...
+       zeros(1,2*n) ones(1,n) (ones(1,n)*-1); ones(1,4*n)]';
+subplot(1,3,2); imagesc(X); colormap('gray');
+title('almost done')
+
+% finally, since the fisrt column stands for cst we can take it out
+
+X = [ones(1,n) zeros(1,2*n) (ones(1,n)*-1); ...
+       zeros(1,n) ones(1,n) zeros(1,n) (ones(1,n)*-1); ...
+       zeros(1,2*n) ones(1,n) (ones(1,n)*-1)]';
+subplot(1,3,3); imagesc(X); colormap('gray');
+title('final design')
+
+% the solution of y=X*betas + cst + e is the same as for the multiple
+% regression betas = inv(X'*X)*X'*y; cst = mean(y) in this case; 
+% model = X*betas + cst; but we can make things faster using the built 
+% in function glmfit (part of the stat toolbox)
+
+[betas, error, stats] = glmfit(X,y,'normal');
+yhat                  = glmval(betas, X, 'identity'); % Yhat = model
+error                 = y - yhat;
+
+% then as for the multiple regression
+ss_total  = norm(y - mean(y)).^2; 
+ss_error  = norm(error).^2; 
+Rsquare   = 1 - ss_error/ss_total; % fitting statistic R2 = part of explained variance
+F         = (Rsquare *(length(y)-rank(X)-1))/((1- Rsquare)*rank(X));
+pval      = 1 - fcdf(F, rank(X), (length(y)-rank(X)-1));
+
+% make cool figures which tell us more than the basic ANOVA
+figure; 
+subplot(1,3,1); 
+boxplot([8 9 7 ;5 7 3 ;3 4 1 ;6 4 9]');
+mytitle = sprintf('F(%g,%g)=%g, p=%g',(length(y)-rank(X)-1), rank(X), F, pval);
+title([mytitle])
+subplot(1,3,2); 
+plot(y); hold on; plot(yhat,'r'); axis tight
+mytitle = sprintf('R square = %g', Rsquare);
+title({'model and data';[mytitle]})
+subplot(1,3,3); normplot(error);
+
+
+%% Summary
+
+% matlab functions
+% glmfit and glmval to solve the normal equations and get the model
+% norm and rank ; size of a vector and rank of a matrix (relates to dof)
+% [betas, error, stats] = glmfit(X,y,'normal');
+% yhat = glmval(betas, X, 'identity'); 
+% norm(y)
+% rank(X)
+
+% linear model
+% we have seens that one can express the groups by dummy variables (1,0,-1)
+% dummy coding specifies groups following the ANOVA equation
+% multiple regression and ANOVA are the same :-)
+% the error is the the difference between the data y and the predictions
+% yhat; while the ss of the effect is the sum of the square distances of 
+% the prediction norm(yhat-mean(yhat)).^2
+
+##### SOURCE END #####
+-->
+   </body>
+</html>

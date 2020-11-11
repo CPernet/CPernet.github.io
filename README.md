@@ -1,2 +1,2 @@
-# cyril.pernet.github.io
+# CPernet.github.io
 personal website

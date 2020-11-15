@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Cyril Pernet - Powered By IndioWeb.in</title>
+	<!-- Description, Keywords and Author -->
+	<meta name="description" content="Personal website, skills, CV ">
+	<meta name="keywords" content="Cyril Pernet, Matlab, Statistics, GLM, fMRI, EEG">
+	<meta name="author" content="Cyril Pernet & ResponsiveWebInc">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<!-- Styles -->
+	<!-- Bootstrap CSS -->
+	<link href="css/bootstrap.min.css" rel="stylesheet">
+	<!-- Font awesome CSS -->
+	<link href="css/fontawesome.min.css" rel="stylesheet">
+	<!-- Custom CSS -->
+	<link href="css/style.css" rel="stylesheet">
+
+	<!-- my style overwrite for hyperlinks -->
+	<style>
+	a:link {
+		color: orange;
+		background-color: transparent;
+		text-decoration: none;
+	}
+
+	a:visited {
+		color: red;
+		background-color: transparent;
+		text-decoration: none;
+	}
+
+	a:hover {
+		color: blue;
+		background-color: transparent;
+		text-decoration: underline;
+	}
+
+	a:active {
+		color: cyan;
+		background-color: transparent;
+		text-decoration: underline;
+	}
+</style>
+
+<!-- Favicon -->
+<link rel="shortcut icon" href="#">
+</head>
+
+<body>
+
+	<div class="wrapper">
+		<!-- header -->
+		<header>
+			<!-- navigation -->
+			<nav class="navbar navbar-default" role="navigation">
+				<div class="container">
+					<!-- Brand and toggle get grouped for better mobile display -->
+					<div class="navbar-header">
+						<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+							<span class="sr-only">Toggle navigation</span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+						</button>
+						<a class="navbar-brand" href="#"><img class="img-responsive" src="img/me.jpg" alt="me" /></a>
+					</div>
+
+					<!-- Collect the nav links, forms, and other content for toggling -->
+					<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+						<ul class="nav navbar-nav">
+							<li><a href="index.html">Overview</a></li>
+							<li class="dropdown">
+								<a href="#" class="dropdown-toggle" data-toggle="dropdown">NeuroImaging & Statistics <span class="caret"></span></a>
+								<ul class="dropdown-menu" role="menu">
+									<li><a href="mri.html">MRI-fMRI</a></li>
+									<li><a href="meeg.html">MEEG</a></li>
+									<li class="divider"></li>
+									<li class="active"><a href="stats_dsp.html">Statistics & DSP</a></li>
+								</ul>
+							</li>
+							<li><a href="skills.html">About me</a></li>
+							<li><a href="https://github.com/CPernet?tab=repositories" target="_blank">Downloads</a></li>
+							<li><a href="Projects.html">Join in projects</a></li>
+						</ul>
+					</div><!-- /.navbar-collapse -->
+				</div><!-- /.container-fluid -->
+			</nav>
+		</header>
+
+		<!-- main content -->
+		<div class="main-content bottom-0">
+			<div class="container">
+				<!-- banner -->
+				<div class="banner pad">
+					<!-- heading -->
+					<h2><span>Dr Cyril Pernet</span></h2>
+					<!-- paragraph -->
+					<p style="color:white">Statistics & Digital Signal Processing</p>
+					<p style="color:white"><a href="#glm">GLM,</a>
+						<a href="#robust">Robust stats,</a>
+						<a href="#dsp">DSP</a>
+				</div>
+			</div>
+
+			<!-- CV -->
+			<div class="cv pad">
+				<div class="container">
+					<div class="cv-item">
+						<div class="row">
+							<div class="col-md-12 col-sm-6">
+								<!-- benefits item -->
+								<div class="cv-item">
+									<!-- heading -->
+									<h2><a name="glm"></a>General Linear Modelling</h2>
+											<!-- heading -->
+											<h3>Linear Algebra</h3>
+											<!-- paragraph -->
+											<p> Like many scientific fields, neuroimaging relies enormously on linear algebra and it is thus worthwhile investing in learning it.
+											Beside this application, all the usual statistics relies on the General LInear Model or related, and this means if you understand linear algebra,
+											you already understand the modelling and pretty much the inferential part of statistical testing. To get you started I have some old material:
+											<a href="https://drive.google.com/file/d/1F3CspBl8MOHN3Q97beQgCo3acGpQ7ynH/view?usp=sharing">an introduction to vectors</a> to understand the
+											relationship between geometry and algebra and a <a href="https://drive.google.com/file/d/1GDAtbSf1ZH6GYcpPmIDwDEMkgRnGFRQy/view?usp=sharing">
+												short text reviewing basic matrix operations.</a></p>
+											<p> Check also the <a href="https://ocw.mit.edu/courses/mathematics/18-06-linear-algebra-spring-2010/">
+												MIT excellent linear algebra course</a>, for free!</p>
+											<!-- heading -->
+											<h3>General Linear Modelling</h3>
+											<!-- paragraph -->
+											<p> This <a href="https://cpernet.github.io/external/glm/GLM_lectures.html">Matlab GLM page</a> explains
+												what is a linear system and how to solve simple and multiple regressions and ANOVA. All of this is performed using standard linear algebra,
+												i.e. matrix inversion. Everything you always wanted to ask about linear independence, orthogonalitity and correlation .. in a bit more than
+												a <a href="https://www.jstor.org/stable/2683250">one page article</a>. I also wrote something on <a href="https://drive.google.com/file/d/1Huk0sSUGnxc8nn_7Qyv4GuyQwTJSiu2v/view?usp=sharing">
+													what makes a contrast orthogonal.</a></p>
+
+								<!-- heading -->
+								<h2><a name="robust"></a>Robust Statistics</h2>
+								<!-- paragraph -->
+								<p>Ordinary Least Squares are not robust because the mean has a 0 breakdown point. Many alternartives exist and I use and develop such methods,
+									in particular <a href="https://github.com/CPernet/Robust-Correlations" target="_blank">robust correlations</a> and
+      					  <a href="https://github.com/CPernet/Robust_Statistical_Toolbox" target="_blank"> tests based on robust estimators.</a></p>
+
+								<!-- heading -->
+								<h2><a name="dsp"></a>Digital Signal Processing</h2>
+									<h3>SFourrier analyses</h3>
+								  <!-- paragraph -->
+								  <p>Fourrier analyses are usuful in so many applications, it is worth knowking about it:
+										<a href="https://drive.google.com/file/d/1pNByEl9jKSHRKWbMfK_fYCOjB2FRfNqF/view?usp=sharing" target="_blank">
+											here is a pdf with code that explains how Fourrier analyses work and things you can do</a></p>
+									</div>
+  						  </div>
+							</div>
+							<hr>
+
+				<!-- footer -->
+				<footer>
+				<div class="container">
+				<!-- This theme comes under Creative Commons Attribution 4.0 Unported. So don't remove below link back -->
+				<p class="copy-right">Copyright &copy; 2020 <a href="https://cpernet.github.io/">https://cpernet.github.io/</a> | Designed By : <a href="http://www.indioweb.in/portfolio">IndioWeb</a>, All rights reserved. </p>
+				</div>
+				</footer>
+				</div>
+
+				<!-- Javascript files -->
+				<!-- jQuery -->
+				<script src="js/jquery.js"></script>
+				<!-- Bootstrap JS -->
+				<script src="js/bootstrap.min.js"></script>
+				<!-- Respond JS for IE8 -->
+				<script src="js/respond.min.js"></script>
+				<!-- HTML5 Support for IE -->
+				<script src="js/html5shiv.js"></script>
+				<!-- Custom JS -->
+				<script src="js/custom.js"></script>
+				</body>
+				</html>

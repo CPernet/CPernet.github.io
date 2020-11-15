@@ -1,0 +1,411 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Computing Percentage Signal Change</title><meta name="generator" content="MATLAB 8.1"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2014-02-05"><meta name="DC.source" content="BOLD_Percentage.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, tt, code { font-size:12px; }
+pre { margin:0px 0px 20px; }
+pre.error { color:red; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Computing Percentage Signal Change</h1><!--introduction--><p>This Matlab code, is a simple demonstration of how to compute percentage signal change using the GLM parameter estimates.</p><p>Reference: <a href="http://www.frontiersin.org/Journal/10.3389/fnins.2014.00001/full">Pernet, C. 2014. Misconceptions in the use of the General Linear Model applied to functional MRI: a tutorial for junior neuro-imagers. Front. Neurosci. 8:1 doi: 10.3389/fnins.2014.00001</a></p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Background</a></li><li><a href="#2">Block design</a></li><li><a href="#3">Event related design with time delay (ie using a derivative)</a></li></ul></div><h2>Background<a name="1"></a></h2><pre class="codeinput"><span class="comment">% We can estimate the percentage signal change using the parameter or contrast</span>
+<span class="comment">% images obtained by the GLM. In the following I use some function from SPM</span>
+<span class="comment">% but the logic applies to most software (although with AFNI it is different</span>
+<span class="comment">% because the temporal mean is removed from the data before the GLM and thus</span>
+<span class="comment">% the interpretation of the constant is different)</span>
+<span class="comment">%</span>
+<span class="comment">% 1. Beta parameter values obtained from the GLM are only meaningful if the</span>
+<span class="comment">% design matrix is non singular (http://en.wikipedia.org/wiki/Invertible_matrix)</span>
+<span class="comment">% i.e. a combination of regressors cannot equal another regressor. This usually</span>
+<span class="comment">% doesn't happen after convolution by the hrf. However, it is still possible</span>
+<span class="comment">% that the matrix is badly scaled - inv(X)*X ~= I. This implies that the solution</span>
+<span class="comment">% is unstable and again beta values are meaningless.</span>
+<span class="comment">%</span>
+<span class="comment">% 2. If you have rest periods (block designs) or null events (event related)</span>
+<span class="comment">% then simply do not model those, making the design matrix invertible and all</span>
+<span class="comment">% is fine. If you don't have those periods or events or if you model them, you</span>
+<span class="comment">% have to use contrasts.</span>
+<span class="comment">%</span>
+<span class="comment">% 3. The sampling scheme (for both blocks and events) matters because it</span>
+<span class="comment">% influences how the regressors are built. This means that the model is</span>
+<span class="comment">% constructed at high resolution and then downsampled to your TR. Therefore</span>
+<span class="comment">% the design matrix is 1. not allways scaled to 1 (depends on the software) and</span>
+<span class="comment">% 2. the maximum of the hrf model can be missed after downsampling. This two</span>
+<span class="comment">% facts entails that a scaling factor must be applied to compute the PSC.</span>
+<span class="comment">% The simplest, best (?) way to obtain this scaling factor is to build a</span>
+<span class="comment">% reference block or trial at high resolution and take its maximum.</span>
+<span class="comment">% Reference_block =  conv(ones(1,duration),SPM.xBF.bf(:,1))';</span>
+<span class="comment">%                    duration = time in sec / SPM.xBF.dt</span>
+<span class="comment">% Reference_trial =  SPM.xBF.bf * ones(1,size(SPM.xBF.bf,2))'</span>
+<span class="comment">%</span>
+<span class="comment">% 4. For event related designs, the hrf model doesn't fit accuratly the data</span>
+<span class="comment">% most of the time. Adding derivatives allows capturing much better the true</span>
+<span class="comment">% signal (or using other basis set like FLOBs in FLS). One issue is that 1.</span>
+<span class="comment">% this becomes difficult to use all of these functions at the second level</span>
+<span class="comment">% and 2. only their combination capture the data and parameters for the hrf</span>
+<span class="comment">% are biased in magnitide. However, we can correct this with simple maths.</span>
+<span class="comment">% One can also generate maps of boosted parameters (see spm_hrf_boost on my</span>
+<span class="comment">% GitHib https://github.com/CPernet/SPM-U-) and directly use them (wit the</span>
+<span class="comment">% SF) to generate percentages</span>
+
+
+
+<span class="comment">% Initial parameters for simulations</span>
+<span class="comment">% hrf model using SPM function</span>
+<span class="comment">% this information is stored in the SPM.mat</span>
+
+clear <span class="string">all</span>
+xBF.dt = 0.5;
+xBF.name = <span class="string">'hrf (with time derivative)'</span>;
+xBF.length = 32;
+xBF.order = 1;
+xBF = spm_get_bf(xBF);
+</pre><h2>Block design<a name="2"></a></h2><p>alternate a single experimental conditions with ~1.1% change relative to baseline 100</p>
+<pre class="codeinput"><span class="comment">% make up fake data Y and the design X</span>
+scale = [1.8, 2 2.2];
+
+<span class="comment">% for a duration is 30 sec, with dt = 0.5 we need 60 points</span>
+Y = [zeros(1,5) conv(ones(1,60),xBF.bf(:,1))'.*scale(1) zeros(1,60) <span class="keyword">...</span>
+    conv(ones(1,60),xBF.bf(:,1))'.*scale(2) zeros(1,60) <span class="keyword">...</span>
+    conv(ones(1,60),xBF.bf(:,1))'.*scale(3) zeros(1,60)];
+Y = ones(length(Y),1).*100+Y';
+
+Regressor = [zeros(1,5) conv(ones(1,60),xBF.bf(:,1))' zeros(1,60) <span class="keyword">...</span>
+    conv(ones(1,60),xBF.bf(:,1))' zeros(1,60) <span class="keyword">...</span>
+    conv(ones(1,60),xBF.bf(:,1))' zeros(1,60)];
+X = [Regressor' ones(length(Y),1)];
+
+figure;
+BFtime = [0:xBF.dt:(length(Y)-1)*xBF.dt];
+subplot(2,5,[1:4]); plot(BFtime,Y,<span class="string">'r'</span>,<span class="string">'LineWidth'</span>,3); grid <span class="string">on</span>;
+title(<span class="string">'Data Y'</span>); subplot(2,5,[6:9]); plot(BFtime,X(:,1),<span class="string">'LineWidth'</span>,3);
+hold <span class="string">on</span>; plot(BFtime,X(:,2),<span class="string">'k'</span>,<span class="string">'LineWidth'</span>,3); grid <span class="string">on</span>; title(<span class="string">'Regressor and constant'</span>)
+subplot(2,5,10); imagesc(X); colormap(<span class="string">'gray'</span>); title(<span class="string">'Design X'</span>)
+
+<span class="comment">% the GLM solution beta and the model Yhat</span>
+beta = pinv(X)*Y;
+Yhat = X*beta;
+
+<span class="comment">% True Percentage Signal Change</span>
+block1=max(Y(7:110));
+block2=max(Y(171:294));
+block3=max(Y(355:498));
+PSC_Y = mean([block1 block2 block3]) - 100;
+
+<span class="comment">% -------------------------</span>
+<span class="comment">% percentage signal change</span>
+<span class="comment">% -------------------------</span>
+<span class="comment">% 1 the reference block is</span>
+Reference_block =  conv(ones(1,60),xBF.bf(:,1))'; <span class="comment">% hrf*30 sec</span>
+<span class="comment">% 2 compute PSC using the scaling factor SF</span>
+SF = max(Reference_block);
+PSC_estimated = beta(1)*100/beta(2)*SF;
+
+figure;
+subplot(1,3,[1 2]); plot(BFtime,Y,<span class="string">'r'</span>,<span class="string">'LineWidth'</span>,3); hold <span class="string">on</span>
+plot(BFtime,Yhat,<span class="string">'--'</span>,<span class="string">'LineWidth'</span>,3); grid <span class="string">on</span>;
+mytitle = sprintf(<span class="string">'Data (red) and model (blue) \n PSC observed %g ; PSC estimated %g'</span>, PSC_Y,PSC_estimated);
+title(mytitle);
+subplot(1,3,3); plot(Reference_block,<span class="string">'LineWidth'</span>,3); title([<span class="string">'Reference block SF='</span> num2str(SF)]);
+axis([1 length(Reference_block) 0 1.5]), grid <span class="string">on</span>
+</pre>
+<p><img vspace="5" hspace="5" src="BOLD_Percentage_01.png" alt=""> <img src="BOLD_Percentage_02.png" alt="" width="656" height="492" vspace="5" hspace="5"> </p>
+<p>&nbsp;</p>
+<h2>Event related design with time delay (ie using a derivative)<a name="3"></a></h2><pre class="codeinput"><span class="comment">% make up fake data Y and the design X</span>
+scale = [16 7 13 14 10 20 14 8 17 11];
+onsets = [1 31 81 93  161 201 218 291 321 361];
+Y = zeros(500,1); <span class="comment">% 250 sec sample at 2Hz</span>
+X = zeros(500,1);
+<span class="keyword">for</span> i=1:10
+    Y(onsets(i)+4) = scale(i);
+    X(onsets(i)) = 1;
+<span class="keyword">end</span>
+Y = conv(Y,xBF.bf(:,1));
+Y = Y(1:400)+100;
+SS(:,1) = conv(X,xBF.bf(:,1));
+SS(:,2) = conv(X,xBF.bf(:,2));
+x = spm_orth(SS);
+X = [x(1:400,:) ones(400,1)];
+
+figure;
+BFtime = [0:xBF.dt:(length(Y)-1)*xBF.dt];
+subplot(2,5,[1:4]); plot(BFtime,Y,<span class="string">'r'</span>,<span class="string">'LineWidth'</span>,3);  grid <span class="string">on</span>; title(<span class="string">'Data Y'</span>)
+subplot(2,5,[6:9]); plot(BFtime,X(:,[1 2]),<span class="string">'LineWidth'</span>,3);  hold <span class="string">on</span>
+plot(BFtime,X(:,3),<span class="string">'k'</span>,<span class="string">'LineWidth'</span>,3);  grid <span class="string">on</span>; title(<span class="string">'Regressors and constant'</span>);axis([0 200 -0.12 1.2])
+subplot(2,5,10); imagesc([zscore(X(:,[1 2])), X(:,3)]); colormap(<span class="string">'gray'</span>); title(<span class="string">'Design X'</span>)
+
+<span class="comment">% the GLM solution beta and the model Yhat</span>
+beta = pinv(X)*Y;
+Yhat = X*beta;
+
+<span class="comment">% True Percentage Signal Change</span>
+<span class="keyword">for</span> e=1:10
+    index = onsets(e);
+    <span class="keyword">if</span> e &lt; 10
+        index2 = onsets(e+1)+4;
+        max_Y(e) = max(Y(index:index2));
+    <span class="keyword">else</span>
+        max_Y(e) = max(Y(index:end));
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+PSC_Y = mean(max_Y) - 100;
+
+<span class="comment">% -------------------------</span>
+<span class="comment">% percentage signal change</span>
+<span class="comment">% -------------------------</span>
+<span class="comment">% 1 Comnpute the refreence trial</span>
+Reference_trial =  xBF.bf * ones(1,size(xBF.bf,2))'; <span class="comment">% use all basis functions</span>
+<span class="comment">% 2 compute PSC using the scaling factor SF and H, the corrected magnitude</span>
+<span class="comment">% of the hrf (corrected for the time delay)</span>
+SF = max(Reference_trial);
+H  = (sqrt(((beta(1)^2)*sum(X(:,1).^2))+((beta(2)^2)*sum(X(:,2).^2))))*sign(beta(1));
+PSC_estimated= H*100./beta(3)*SF ;
+
+figure;
+subplot(1,3,[1 2]); plot(BFtime,Y,<span class="string">'r'</span>,<span class="string">'LineWidth'</span>,3); hold <span class="string">on</span>
+plot(BFtime,Yhat,<span class="string">'--'</span>,<span class="string">'LineWidth'</span>,3); grid <span class="string">on</span>;
+mytitle = sprintf(<span class="string">'Data (red) and model (blue) \n PSC observed %g ; PSC estimated %g'</span>, PSC_Y,PSC_estimated);
+title(mytitle);
+subplot(1,3,3); plot(Reference_trial,<span class="string">'LineWidth'</span>,3); title([<span class="string">'Reference trial SF='</span> num2str(SF)]);
+axis([1 length(Reference_trial) -0.02 0.15]), grid <span class="string">on</span>
+</pre><img vspace="5" hspace="5" src="BOLD_Percentage_03.png" alt=""> <img src="BOLD_Percentage_04.png" alt="" width="666" height="489" vspace="5" hspace="5"> <p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2013a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Computing Percentage Signal Change
+%
+% This Matlab code, is a simple demonstration of how to compute percentage
+% signal change using the GLM parameter estimates. 
+%
+% Reference: <http://www.frontiersin.org/Journal/10.3389/fnins.2014.00001/full Pernet, C. 2014. Misconceptions in the use of the General 
+% Linear Model applied to functional MRI: a tutorial for junior 
+% neuro-imagers. Front. Neurosci. 8:1 doi: 10.3389/fnins.2014.00001>
+
+
+%% Background
+
+% We can estimate the percentage signal change using the parameter or contrast
+% images obtained by the GLM. In the following I use some function from SPM
+% but the logic applies to most software (although with AFNI it is different 
+% because the temporal mean is removed from the data before the GLM and thus
+% the interpretation of the constant is different)
+% 
+% 1. Beta parameter values obtained from the GLM are only meaningful if the 
+% design matrix is non singular (http://en.wikipedia.org/wiki/Invertible_matrix)
+% i.e. a combination of regressors cannot equal another regressor. This usually
+% doesn't happen after convolution by the hrf. However, it is still possible 
+% that the matrix is badly scaled - inv(X)*X ~= I. This implies that the solution 
+% is unstable and again beta values are meaningless. 
+% 
+% 2. If you have rest periods (block designs) or null events (event related) 
+% then simply do not model those, making the design matrix invertible and all 
+% is fine. If you don't have those periods or events or if you model them, you
+% have to use contrasts.
+% 
+% 3. The sampling scheme (for both blocks and events) matters because it
+% influences how the regressors are built. This means that the model is 
+% constructed at high resolution and then downsampled to your TR. Therefore
+% the design matrix is 1. not allways scaled to 1 (depends on the software) and
+% 2. the maximum of the hrf model can be missed after downsampling. This two
+% facts entails that a scaling factor must be applied to compute the PSC.
+% The simplest, best (?) way to obtain this scaling factor is to build a
+% reference block or trial at high resolution and take its maximum.
+% Reference_block =  conv(ones(1,duration),SPM.xBF.bf(:,1))'; 
+%                    duration = time in sec / SPM.xBF.dt
+% Reference_trial =  SPM.xBF.bf * ones(1,size(SPM.xBF.bf,2))'
+%
+% 4. For event related designs, the hrf model doesn't fit accuratly the data 
+% most of the time. Adding derivatives allows capturing much better the true
+% signal (or using other basis set like FLOBs in FLS). One issue is that 1. 
+% this becomes difficult to use all of these functions at the second level
+% and 2. only their combination capture the data and parameters for the hrf
+% are biased in magnitide. However, we can correct this with simple maths.
+% One can also generate maps of boosted parameters (see spm_hrf_boost on my
+% GitHib https://github.com/CPernet/SPM-U-) and directly use them (wit the
+% SF) to generate percentages
+ 
+
+
+% Initial parameters for simulations 
+% hrf model using SPM function
+% this information is stored in the SPM.mat
+
+clear all
+xBF.dt = 0.5;
+xBF.name = 'hrf (with time derivative)';
+xBF.length = 32;
+xBF.order = 1;
+xBF = spm_get_bf(xBF);
+
+%% Block design 
+% alternate a single experimental conditions with ~1.1% 
+% change relative to baseline 100
+
+% make up fake data Y and the design X
+scale = [1.8, 2 2.2]; 
+
+% for a duration is 30 sec, with dt = 0.5 we need 60 points 
+Y = [zeros(1,5) conv(ones(1,60),xBF.bf(:,1))'.*scale(1) zeros(1,60) ...
+    conv(ones(1,60),xBF.bf(:,1))'.*scale(2) zeros(1,60) ...
+    conv(ones(1,60),xBF.bf(:,1))'.*scale(3) zeros(1,60)];
+Y = ones(length(Y),1).*100+Y';
+
+Regressor = [zeros(1,5) conv(ones(1,60),xBF.bf(:,1))' zeros(1,60) ...
+    conv(ones(1,60),xBF.bf(:,1))' zeros(1,60) ...
+    conv(ones(1,60),xBF.bf(:,1))' zeros(1,60)];
+X = [Regressor' ones(length(Y),1)];
+
+figure;
+BFtime = [0:xBF.dt:(length(Y)-1)*xBF.dt];
+subplot(2,5,[1:4]); plot(BFtime,Y,'r','LineWidth',3); grid on; 
+title('Data Y'); subplot(2,5,[6:9]); plot(BFtime,X(:,1),'LineWidth',3);
+hold on; plot(BFtime,X(:,2),'k','LineWidth',3); grid on; title('Regressor and constant')
+subplot(2,5,10); imagesc(X); colormap('gray'); title('Design X')
+
+% the GLM solution beta and the model Yhat 
+beta = pinv(X)*Y;
+Yhat = X*beta;
+
+% True Percentage Signal Change
+block1=max(Y(7:110));
+block2=max(Y(171:294));
+block3=max(Y(355:498));
+PSC_Y = mean([block1 block2 block3]) - 100;
+
+% REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH-
+% percentage signal change
+% REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH-
+% 1 the reference block is
+Reference_block =  conv(ones(1,60),xBF.bf(:,1))'; % hrf*30 sec
+% 2 compute PSC using the scaling factor SF
+SF = max(Reference_block);
+PSC_estimated = beta(1)*100/beta(2)*SF;
+
+figure;
+subplot(1,3,[1 2]); plot(BFtime,Y,'r','LineWidth',3); hold on
+plot(BFtime,Yhat,'REPLACE_WITH_DASH_DASH','LineWidth',3); grid on; 
+mytitle = sprintf('Data (red) and model (blue) \n PSC observed %g ; PSC estimated %g', PSC_Y,PSC_estimated);
+title(mytitle);
+subplot(1,3,3); plot(Reference_block,'LineWidth',3); title(['Reference block SF=' num2str(SF)]);
+axis([1 length(Reference_block) 0 1.5]), grid on
+
+
+%% Event related design with time delay (ie using a derivative)
+
+% make up fake data Y and the design X
+scale = [16 7 13 14 10 20 14 8 17 11]; 
+onsets = [1 31 81 93  161 201 218 291 321 361];
+Y = zeros(500,1); % 250 sec sample at 2Hz
+X = zeros(500,1);
+for i=1:10
+    Y(onsets(i)+4) = scale(i);
+    X(onsets(i)) = 1;
+end 
+Y = conv(Y,xBF.bf(:,1));
+Y = Y(1:400)+100;
+SS(:,1) = conv(X,xBF.bf(:,1));
+SS(:,2) = conv(X,xBF.bf(:,2));
+x = spm_orth(SS); 
+X = [x(1:400,:) ones(400,1)];
+
+figure;
+BFtime = [0:xBF.dt:(length(Y)-1)*xBF.dt];
+subplot(2,5,[1:4]); plot(BFtime,Y,'r','LineWidth',3);  grid on; title('Data Y')
+subplot(2,5,[6:9]); plot(BFtime,X(:,[1 2]),'LineWidth',3);  hold on
+plot(BFtime,X(:,3),'k','LineWidth',3);  grid on; title('Regressors and constant');axis([0 200 -0.12 1.2])
+subplot(2,5,10); imagesc([zscore(X(:,[1 2])), X(:,3)]); colormap('gray'); title('Design X')
+
+% the GLM solution beta and the model Yhat 
+beta = pinv(X)*Y;
+Yhat = X*beta;
+
+% True Percentage Signal Change
+for e=1:10
+    index = onsets(e); 
+    if e < 10 
+        index2 = onsets(e+1)+4;
+        max_Y(e) = max(Y(index:index2));
+    else
+        max_Y(e) = max(Y(index:end));
+    end
+end
+PSC_Y = mean(max_Y) - 100;
+ 
+% REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH-
+% percentage signal change
+% REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH-
+% 1 Comnpute the refreence trial
+Reference_trial =  xBF.bf * ones(1,size(xBF.bf,2))'; % use all basis functions
+% 2 compute PSC using the scaling factor SF and H, the corrected magnitude
+% of the hrf (corrected for the time delay)
+SF = max(Reference_trial);
+H  = (sqrt(((beta(1)^2)*sum(X(:,1).^2))+((beta(2)^2)*sum(X(:,2).^2))))*sign(beta(1));
+PSC_estimated= H*100./beta(3)*SF ;
+
+figure;
+subplot(1,3,[1 2]); plot(BFtime,Y,'r','LineWidth',3); hold on
+plot(BFtime,Yhat,'REPLACE_WITH_DASH_DASH','LineWidth',3); grid on; 
+mytitle = sprintf('Data (red) and model (blue) \n PSC observed %g ; PSC estimated %g', PSC_Y,PSC_estimated);
+title(mytitle);
+subplot(1,3,3); plot(Reference_trial,'LineWidth',3); title(['Reference trial SF=' num2str(SF)]);
+axis([1 length(Reference_trial) -0.02 0.15]), grid on
+
+
+
+##### SOURCE END #####
+--></body></html>

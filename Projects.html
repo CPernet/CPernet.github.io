@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Cyril Pernet - Powered By IndioWeb.in</title>
+	<!-- Description, Keywords and Author -->
+	<meta name="description" content="Personal website ; info on my research and other useful neuro-imaging and statistical tips">
+	<meta name="keywords" content="Cyril Pernet, Matlab, Statistics, GLM, fMRI, EEG">
+	<meta name="author" content="Cyril Pernet & ResponsiveWebInc">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<!-- Styles -->
+	<!-- Bootstrap CSS -->
+	<link href="css/bootstrap.min.css" rel="stylesheet">
+	<!-- Font awesome CSS -->
+	<link href="css/fontawesome.min.css" rel="stylesheet">
+	<!-- Custom CSS -->
+	<link href="css/style.css" rel="stylesheet">
+
+	<!-- my style overwrite for hyperlinks -->
+	<style>
+	a:link {
+		color: orange;
+		background-color: transparent;
+		text-decoration: none;
+	}
+
+	a:visited {
+		color: red;
+		background-color: transparent;
+		text-decoration: none;
+	}
+
+	a:hover {
+		color: blue;
+		background-color: transparent;
+		text-decoration: underline;
+	}
+
+	a:active {
+		color: cyan;
+		background-color: transparent;
+		text-decoration: underline;
+	}
+</style>
+
+<!-- Favicon -->
+<link rel="shortcut icon" href="#">
+</head>
+
+<body>
+
+	<div class="wrapper">
+		<!-- header -->
+		<header>
+			<!-- navigation -->
+			<nav class="navbar navbar-default" role="navigation">
+				<div class="container">
+					<!-- Brand and toggle get grouped for better mobile display -->
+					<div class="navbar-header">
+						<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+							<span class="sr-only">Toggle navigation</span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+						</button>
+						<a class="navbar-brand" href="#"><img class="img-responsive" src="img/me.jpg" alt="me" /></a>
+					</div>
+
+					<!-- Collect the nav links, forms, and other content for toggling -->
+					<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+						<ul class="nav navbar-nav">
+							<li><a href="index.html">Overview</a></li>
+							<li class="dropdown">
+								<a href="#" class="dropdown-toggle" data-toggle="dropdown">NeuroImaging & Statistics <span class="caret"></span></a>
+								<ul class="dropdown-menu" role="menu">
+									<li><a href="mri.html">MRI-fMRI</a></li>
+									<li><a href="meeg.html">MEEG</a></li>
+									<li class="divider"></li>
+									<li><a href="stats_dsp.html">Statistics & DSP</a></li>
+								</ul>
+							</li>
+							<li><a href="skills.html">About me</a></li>
+							<li><a href="https://github.com/CPernet?tab=repositories" target="_blank">Downloads</a></li>
+							<li class="active"><a href="Projects.html">Join in projects</a></li>
+						</ul>
+					</div><!-- /.navbar-collapse -->
+				</div><!-- /.container-fluid -->
+			</nav>
+		</header>
+
+				<!-- Use blog pad for projects -->
+				<div class="blog pad">
+					<div class="container">
+						<div class="default-heading">
+							<!-- heading -->
+							<h2>Projects</h2>
+						</div>
+						<div class="row">
+							<div class="col-md-6">
+								<!-- blog entry -->
+								<div class="entry">
+									<!-- blog post image -->
+									<div class="entry-pic">
+										<img class="img-responsive" src="img/project/LIMO.jpg" alt="LIMO MEEG" />
+									</div>
+									<!-- blog content details -->
+									<div class="entry-post">
+										<!-- blog title -->
+										<h3> <a href="https://github.com/LIMO-EEG-Toolbox/limo_meeg">
+											LInear MOdelling (statistics and machine learing) for MEEG data toolbox</a></h3>
+										<!-- paragraph -->
+										<p>A Matlab based toolbox running on top of EEGLAB and FieldTrip for all your statistical analyses.
+										We are looking for more ML models (maybe interact with nylearn), more FieldTrip integration, more source analyses, etc </p>
+									</div>
+									<div class="clearfix"></div>
+								</div>
+							</div>
+							<div class="col-md-6">
+								<!-- blog entry -->
+								<div class="entry">
+									<!-- blog post image -->
+									<div class="entry-pic">
+										<img class="img-responsive" src="img/project/SPMUP.jpg" alt="SPMUP" / >
+									</div>
+									<!-- blog content details -->
+									<div class="entry-post">
+										<!-- blog title -->
+										<h3><a href="https://github.com/CPernet/spmup">
+											SPM Utility Plus</a></h3>
+										<!-- paragraph -->
+										<p>Matlab library for SPM to get more out of your data (QA, boosting, adpative thresholding)</p>
+									</div>
+									<div class="clearfix"></div>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-6">
+								<!-- blog entry -->
+								<div class="entry">
+									<!-- blog post image -->
+									<div class="entry-pic">
+										<img class="img-responsive" src="img/project/BIDS_logo.jpg" alt="BIDS official logo" />
+									</div>
+									<!-- blog content details -->
+									<div class="entry-post">
+										<!-- blog title -->
+										<h3> <a href="https://bids.neuroimaging.io/get_involved.html">
+											Brai Imaging Data Structure</a></h3>
+										<!-- paragraph -->
+										<p>I am co-leading the electrophysiology sisde of BIDS, join the team to buld up 'derivatives'</p>
+									</div>
+									<div class="clearfix"></div>
+								</div>
+							</div>
+							<div class="col-md-6">
+								<!-- blog entry -->
+								<div class="entry">
+									<!-- blog post image -->
+									<div class="entry-pic">
+										<img class="img-responsive" src="img/project/applications.jpg" alt="applied projects" />
+									</div>
+									<!-- blog content details -->
+									<div class="entry-post">
+										<!-- blog title -->
+										<h3>Enough tool building - I want to process data</h3>
+										<!-- paragraph -->
+										<p>Over the years I have accumulated far to many data that need curated, analyzed and shared. Also there are plenty of data out there we can use. Get in touch if you want to run some project together - remote work is fine, no need to get you up to Scotland.</p>
+									</div>
+									<div class="clearfix"></div>
+								</div>
+							</div>
+						</div>
+						<div class="blog-btn">
+							<!-- button -->
+							<a href="https://github.com/CPernet?tab=repositories" target="_blank" class="btn btn-warning">Access repositories</a>
+						</div>
+					</div>
+				</div>
+
+			</div>
+
+			<!-- footer -->
+			<footer>
+				<div class="container">
+					<!-- This theme comes under Creative Commons Attribution 4.0 Unported. So don't remove below link back -->
+					<p class="copy-right">Copyright &copy; 2020 <a href="https://cpernet.github.io/">https://cpernet.github.io/</a> | Designed By : <a href="http://www.indioweb.in/portfolio">IndioWeb</a>, All rights reserved. </p>
+				</div>
+			</footer>
+		</div>
+
+		<!-- Javascript files -->
+		<!-- jQuery -->
+		<script src="js/jquery.js"></script>
+		<!-- Bootstrap JS -->
+		<script src="js/bootstrap.min.js"></script>
+		<!-- Respond JS for IE8 -->
+		<script src="js/respond.min.js"></script>
+		<!-- HTML5 Support for IE -->
+		<script src="js/html5shiv.js"></script>
+		<!-- Custom JS -->
+		<script src="js/custom.js"></script>
+	</body>
+	</html>

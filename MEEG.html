@@ -1,75 +1,270 @@
-﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<!DOCTYPE html>
+<html>
 <head>
-<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-<meta name="description" content="Various info related to MEEG" />
-<meta name="keywords" content="EEG MEG Neuropsysiology" />
-<meta name="author" content="Cyril Pernet  / Original design: Andreas Viklund - http://andreasviklund.com/" />
-<link rel="stylesheet" type="text/css" href="andreas01.css" media="screen" title="andreas01 (screen)" />
-<link rel="stylesheet" type="text/css" href="print.css" media="print" />
-<title>Cyril Pernet Personal website</title>
+	<meta charset="utf-8">
+	<title>Cyril Pernet - Powered By IndioWeb.in</title>
+	<!-- Description, Keywords and Author -->
+	<meta name="description" content="Personal website, skills, CV ">
+	<meta name="keywords" content="Cyril Pernet, Matlab, Statistics, GLM, fMRI, EEG">
+	<meta name="author" content="Cyril Pernet & ResponsiveWebInc">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<!-- Styles -->
+	<!-- Bootstrap CSS -->
+	<link href="css/bootstrap.min.css" rel="stylesheet">
+	<!-- Font awesome CSS -->
+	<link href="css/fontawesome.min.css" rel="stylesheet">
+	<!-- Custom CSS -->
+	<link href="css/style.css" rel="stylesheet">
+
+	<!-- my style overwrite for hyperlinks -->
+	<style>
+	a:link {
+		color: orange;
+		background-color: transparent;
+		text-decoration: none;
+	}
+
+	a:visited {
+		color: red;
+		background-color: transparent;
+		text-decoration: none;
+	}
+
+	a:hover {
+		color: blue;
+		background-color: transparent;
+		text-decoration: underline;
+	}
+
+	a:active {
+		color: cyan;
+		background-color: transparent;
+		text-decoration: underline;
+	}
+</style>
+
+<!-- Favicon -->
+<link rel="shortcut icon" href="#">
 </head>
 
-<body><div id="wrap">
+<body>
 
-<div id="header">
-<h1>Cyril Pernet, PhD</h1>
-<p><strong> « La science ne s'établissant que par comparaison, la connaissance de l'état pathologique ou anormal ne saurait être obtenue sans la connaissance de l'état  normal »</strong>- <strong>Claude Bernard</strong></p>
-</div>
-<img src="gfx/gfx_index.jpg" alt="" width="759" height="161" />
-<div id="avmenu">
-  <h2 class="hide">Menu:</h2>
-<ul>
-<li><a href="index.html">Home</a></li>
-<li><a href="teaching.html">Teaching</a></li>
-<li><a href="Downloads.html">Downloads</a></li>
-<li><a href="fMRI.html">fMRI</a></li>
-<li><a href="MEEG.html">Neurophysio</a></li>
-<li></li>
-<p><a href="MEEG2.html">The basis</a></p>
-<p><a href="MEEG3.html">NRG production and consumption</a></p>
-<p><a href="MEEG4.html">The neurovascular system</a></p>
-<p><a href="MEEG5.html">Electrophysiological recordings</a></p>
-<li>
-  <p>&nbsp;</p>
-</li>
-<li><a href="Stats.html">Statistics</a></li></ul>
-</div>
-<div id="extras">
+	<div class="wrapper">
+		<!-- header -->
+		<header>
+			<!-- navigation -->
+			<nav class="navbar navbar-default" role="navigation">
+				<div class="container">
+					<!-- Brand and toggle get grouped for better mobile display -->
+					<div class="navbar-header">
+						<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+							<span class="sr-only">Toggle navigation</span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+						</button>
+						<a class="navbar-brand" href="#"><img class="img-responsive" src="img/me.jpg" alt="me" /></a>
+					</div>
 
-<p>&nbsp;</p>
- 
-</div><div id="content">
-<h2>My Neuropshysiology pages</h2>
-<p>The goal of these pages is to examine the link between neuron networks and neuroimaging data. An extensive review is, of course, not possible; also I focused on neuron properties and communication, metabolism and imaging devices.
-<p> <strong>Brain in numbers:</strong></p>
-<p><em>The whole brain</em></p>
-<p>The cerebral cortex is composed of 3 cortices with different phylogenetic origins: <br />
-  - the paleocortex (1% of the cortical surface, mainly olfactif cortex)<br />
-  - the archicortex (3-4% of the cortical surface, hippocampic region)<br />
-  - the neocortex (95% of the cortical surface, 6 layers organization, 32% frontal cortex, 30% parietal cortex, 23% temporal cortex and 15% occipital cortex)</p>
-<p>The whole cerebral cortex volume is around 300cm^3 for men and 270cm^3 for women. The cortical surface represents 2200cm^2 and the neocortex thickness varies from 1.5 to 4.5mm.</p>
-<p><em>Blood flow and Metabolism</em></p>
-<p>An average brain weights about 1400g, i.e. only 2 to 3% of the total body weight. The air entering our lungs contains 21% oxygen, and by the time the oxygen reaches our brain this value has fallen to 4%. Yet, an adult brain consumes about 20% of the whole blood oxygen and about 750mL of blood every minute, extracting 10% of the 90mg/dL of glucose contained in the blood.</p>
-<p><em>Neurons</em></p>
-<p>The estimated number of neuron varies between 2.6x10^9 and 16x10^9, with a density of 14-18 neurons in the agranular cortex to 40-100 neurons for 0.001mm^3 in the visual cortex. Despite this huge numbers, neurons make up only 10% of brain cells and about 90% of the cells are glial (microglia, astrocytes, oligodendrocytes).</p>
-<p>One neuron may have hundreds or thousands of synapses on its dendrites and soma and the estimated number of synapses is 100x10^12 synapses for the human brain.</p>
-<p><em>Neurons in fMRI</em></p>
-<p>For an average 55mm cubic voxel, less than 3% of the volume is occupied by vessels and the rest by neural elements. This means that in an unfiltered (smoothed) voxel there is about 5.5 million neurons, 2.2^10 to 5.5^10 synapses, 22 km of dendrites and 220 km of axons (Logothetis, Nature 453, 2008)</p>
+					<!-- Collect the nav links, forms, and other content for toggling -->
+					<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+						<ul class="nav navbar-nav">
+							<li><a href="index.html">Overview</a></li>
+							<li class="dropdown">
+								<a href="#" class="dropdown-toggle" data-toggle="dropdown">NeuroImaging & Statistics <span class="caret"></span></a>
+								<ul class="dropdown-menu" role="menu">
+									<li><a href="mri.html">MRI-fMRI</a></li>
+									<li class="active"><a href="meeg.html">MEEG</a></li>
+									<li class="divider"></li>
+									<li><a href="stats_dsp.html">Statistics & DSP</a></li>
+								</ul>
+							</li>
+							<li><a href="skills.html">About me</a></li>
+							<li><a href="https://github.com/CPernet?tab=repositories" target="_blank">Downloads</a></li>
+							<li><a href="Projects.html">Join in projects</a></li>
+						</ul>
+					</div><!-- /.navbar-collapse -->
+				</div><!-- /.container-fluid -->
+			</nav>
+		</header>
 
-<p align="justify">&nbsp;</p>
-<p align="justify">&nbsp;</p>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
+		<!-- main content -->
+		<div class="main-content bottom-0">
+			<div class="container">
+				<!-- banner -->
+				<div class="banner pad">
+					<!-- heading -->
+					<h2><span>Dr Cyril Pernet</span></h2>
+					<!-- paragraph -->
+					<p style="color:white">Human ElectoPhysiology</p>
+					<p style="color:white"><a href="#numbers">The brain in numbers,</a>
+						<a href="#recordings">Recordings,</a>
+						<a href="#stats">Stats,</a>
+					  <a href="#lectures">Lectures</a></p>
+				</div>
+			</div>
+
+			<!-- CV -->
+			<div class="cv pad">
+				<div class="container">
+					<div class="cv-item">
+						<div class="row">
+							<div class="col-md-12 col-sm-6">
+								<!-- benefits item -->
+								<div class="cv-item">
+									<!-- heading -->
+									<h2>Foreword</h2>
+									<!-- paragraph -->
+									<p>- Most of the things you need to think about are described in the OHBM
+										<a href="https://cobidasmeeg.wordpress.com/" target="_blank">MEEG COBIDAS.</a></p>
+
+									<!-- heading -->
+									<h2><a name="numbers"></a>Brain in numbers</h2>
+									<!-- paragraph -->
+									<p> The cerebral cortex is composed of 3 cortices with different phylogenetic origins:</p>
+									<p>- the paleocortex (1% of the cortical surface, mainly olfactif cortex)</p>
+									<p>- the archicortex (3-4% of the cortical surface, hippocampic region)</p>
+									<br><p> The neocortex (95% of the cortical surface, 6 layers organization, 32% frontal cortex, 30% parietal cortex,
+										23% temporal cortex and 15% occipital cortex). The whole cerebral cortex volume is around 300cm^3 for men and 270cm^3 for women.
+										The cortical surface represents 2200cm^2 and the neocortex thickness varies from 1.5 to 4.5mm.</p>
+										<br><p><strong>Blood flow and Metabolism</strong></p>
+										<p>An average brain weights about 1400g, i.e. only 2 to 3% of the total body weight. The air entering our lungs
+											contains 21% oxygen, and by the time the oxygen reaches our brain this value has fallen to 4%. Yet, an adult brain
+											consumes about 20% of the whole blood oxygen and about 750mL of blood every minute, extracting 10% of the 90mg/dL
+											of glucose contained in the blood.</p>
+									<br><p><strong>Neurons</strong></p>
+                  <p> The estimated number of neuron varies between 2.6x10^9 and 16x10^9, with a density of 14-18 neurons
+										in the agranular cortex to 40-100 neurons for 0.001mm^3 in the visual cortex. Despite this huge numbers,
+										neurons make up only 10% of brain cells and about 90% of the cells are glial (microglia, astrocytes,
+										oligodendrocytes). One neuron may have hundreds or thousands of synapses on its dendrites and soma and the
+										estimated number of synapses is 100x10^12 synapses for the human brain. For an average 55mm cubic voxel, less
+										than 3% of the volume is occupied by vessels and the rest by neural elements. This means that in an unfiltered (smoothed)
+										voxel there is about 5.5 million neurons, 2.2^10 to 5.5^10 synapses, 22 km of dendrites and 220 km of axons
+										<a href="https://www.nature.com/articles/nature06976">(Logothetis, Nature 453, 2008)</a></p><br>
+
+								<!-- heading -->
+								<h2><a name="recordings"></a>ElectroPhysiological Recording</h2>
+								<!-- paragraph -->
+								<h3>Neuronal Recording</h3>
+                <p> An EPSP that reaches an apical dendrite activates non-specific cation channels and thus elicits a depolarization
+									of the cell membrane. The variation of the electrical potential depends of the importance of the EPSP and the resistivity
+									of the membrane (highest resistivity if numerous IPSP). For intracellular recording, the electrical potential relies on
+									the comparison between the membrane cell and the extracell environment. Thus, the variation of the electrical potential
+									reflects roughly the product of the importance of EPSP by the resistivity. If we use an electrode in the extracellular
+									environment (extracell recording) but close to cell, the variation of the electrical potential will depend on the importance
+									of EPSP and the resistance of the extracellular environment. One difference is the amplitude of the response, intracell recording
+									shows membrane depolarization and thus the amplitude is in millivolt, whereas for extracell recording, the amplitude is in microvolt.
+									But, most important, the intracell recording signal is always positive whereas the extracell recording shows different polarities
+									according to the electrode position. If the electrode 'looks' at where current enters, the signal is negative, whereas if it looks at
+									where the current leaves, the signal is positive.</p><br>
+               <p> A manoelectrode located on the cortex record field potentials, i.e. the sum of extracell potentials elicited by the synchronous firing
+								 of neurons. Field potentials varies according to, at least, 4 characteristics:</p>
+               <p> i) the amplitude decreases according to the distance (1/d^2) between the electrode and the neural population.</p>
+               <p> ii) when EPSP arrive to the surface layers, the electrode see positive charges 'leaving' and thus record a negative potential, whereas a deep electrode see positive charges 'approaching' and this record a positive potential and vis versa when EPSP arrive to the deep layers.</p>
+               <p> iii) polarities are reversed for IPSP.</p>
+               <p> iv) it exist a continuum between surface and deep electrodes.</p>
+               <h3>MEG/EEG</h3>
+               <p> The electrical activity of neuronal populations, and thus magnetic concurrent fields, can be recorded using macro-detectors on the scalp surface.
+								 One can distinguish primary currents, which are related to the movement of ions, and volume currents that correspond to passive ohmic currents settled
+								 up in the surrounding medium. Recorded variations correspond to the sum of ionic current in the extracellular space.</p>
+							<br><p><strong>EEG</strong></p>
+              <p> The ElectroEncephalography method measures neuronal activity using several electrodes placed on the scalp (fig 1). EEG recording corresponds
+								to the electrical potential difference between two electrodes: either between one active electrode on the scalp and one reference electrode
+								located far from the recording site, or between two active electrodes. Amplitudes (20 to 100 microvolt) and frequencies (1 to 40hz) vary according
+								to subjects' activity. According to the position of electrodes and cortical current, the signal can be positive or negative.</p>
+								<br><figure>
+									<img src="img\meeg\eeg.jpg" alt="eeg subject">
+									<figcaption>Subject sitting in front of a computer ready for an EEG experiment (from the PhD years!).
+									On his head, a 64 electrodes cap recording the electrical activity of neurons.</figcaption>
+								</figure><br>
+              <p><strong>MEG</strong></p>
+              <p> The fluctuating electrical currents measured with EEG also produce a magnetic field over the head.
+								Because the same neuronal population elicits EEG and MEG components, both techniques measure roughly the same thing. However, MEG spatial maps are quite different
+								and techniques are more complementary than redundant (see "neural sources"). Looking at map patterns, one can see that EEG and MEG tend to present perpendicular
+								patterns due to the difference in the type of sources. The measured neuromagnetic field is extremely weak, about 10^-12 tesla, which is weaker than the urban's magnetic
+								background (10^-7 T) and the earth's magnetic field (10^-4 T). Therefore, in contrast with EEG, MEG measurements need a suppression of any fluctuating magnetic background
+								and highly sensitive detectors. The suppression of the fluctuating magnetic background is performed by the use of a shielded room (exclude external magnetic fields) and a
+								measure of magnetic gradient within the shielded room. Detectors are complex coils (SQUID Superconducting Quantum Interference Device) that measure the weak magnetic fluxes.
+								One can roughly summarize the concept of a SQUID as a superconduction ring interrupted by two Josephson junctions that limit the flow of the supercurrent, making easier to
+								exploit flux quantization for the measurement of the magnetic field. The magnetic flux is measured through the SQUID loop since current over the Josephson's junctions is a
+								periodic function of this magnetic flux. Measures are based on the fact that the voltage over the junctions is approximately a linear function of the magnetic flux. The signal
+								is carried to SQUID via a flux transformer. A flux transformer is also a superconducting loop. Thus, magnetic fluxes induce a current in it that is a direct function of the
+								magnetic density, with no signal loss. Modern MEG devices uses several transformers for a given locations, usually one for the x direction and one for the y direction perpendicular
+								to z magnetic flux, which is the magnetic flux perpendicular to the surface of the helmet.</p>
+								<br><figure>
+									<img src="img\meeg\meg.jpg" alt="me as a subject">
+									<figcaption>Me ! in the 306 channels vectorview MEG system
+									of the Low Temperature Laboratory in Helsinki.</figcaption>
+								</figure><br>
+               <p><strong>Neural Sources</strong></p>
+              <p> If the primary source and the surrounding conductivity distribution are known, the resulting electric potential and magnetic fields can be calculated from Maxwell's equations.
+								Looking at EEG or MEG data is known as the electromagnetic inverse problem, i.e. dealing with the deduction of the source currents responsible for the measured field. Indeed, such
+								problem has no unique solution (von Helmholtz, 1853) and source models are used to approximate the solution. The optimal solution is usually found by fitting (least-squares method)
+								the theoretical and measured field patterns to get the equivalent current dipole (ECD).</p>
+							<p> Both EEG and MEG provide a projection of primary current distribution on the respective lead fields, i.e. the sensitivity distribution of the detectors, and measure weighted integrals
+								of this primary current distribution. In general, MEG gives a better spatial information than EEG. First, MEG is sensitive to dipoles oriented radially to the skull only. This is due to
+								the symmetry and cancellations that take place in perfectly spherical conductors (of course in the real word, the head of our subjects is not perfectly spherical) and there is only one MEG
+								signal for a tangential dipole. Second, EEG measures both radial and tangential sources leading to more complex interpretation of the sources. Indeed, because tangential electrical sources
+								tend to be located in the sulci and radial one on the gyri, MEG and EEG are complementary techniques for a full investigation of neural sources. And third, the electrical lead field is affected
+								by the conductivity of the skull and the scalp leading to blurred signal whereas the magnetic field is not altered by such inhomogeneities.</p><br>
+							<p> For a full review of mathematical methods on the direct and inverse problem as well as a full description of MEG device see: Hämäläinen, M., Hari, R., Limoniemi, R.J., Knuutila, J. & Lounasmaa, O.V.
+								(1993). <a href="https://acris.aalto.fi/ws/portalfiles/portal/14383291/RevModPhys.65.413.pdf">
+									Magnetoencephalography - theory, instrumentation, and applications to noninvasive studies of the working human brain.</a> Reviews of Modern Physics, 65, 413-497.</p>
+
+								<!-- heading -->
+								<h2><a name="stats"></a>Electrophysiology Statistics</h2>
+									<h3>The LIMO project</h3>
+								  <!-- paragraph -->
+								  <p>The LInear MOdelling toolbox, is a matlab based code aiming at providing full sensor or source space analysis of your EEG or MEG data.
+										It is 100% compatible with EEGLAB for which we have a STUDY GUI integration, and the code is also compatible with FieldTrip (at least for ERP).
+										See <a href="https://github.com/LIMO-EEG-Toolbox/limo_meeg" target="_blank">out GitHub repository </a>for more information.</p>
+                <!-- heading -->
+								  <h3>Multiple comparison corrections in MEEG</h3>
+								  <!-- paragraph -->
+								  <p>As part of the LIMO tools, corrections for false positives need to be developped given the huge number of
+									  statistical tests we perform. You can learn about this topic in this
+									  <a href="https://neurostatscyrilpernet.blogspot.com/2019/06/bootstrapping-and-multiple-comparisons.html" target="_blank">blog post.</a></p>
+  						  </div>
+							</div>
+							<hr>
+
+							<div class="row">
+								<div class="col-md-12 col-sm-6">
+									<!-- benefits item -->
+									<div class="cv-item">
+										<!-- heading -->
+							      <h2><a name="lectures"></a>Lectures</h2>
+							      <!-- paragraph -->
+							      <p>You can access all my lectures slides here:</p>
+                    <p>-<a href="https://drive.google.com/file/d/1ERoVhBYmY0GvVHfWVBtqTgutC6y92-xN/view?usp=sharing" target="_blank">Hierarchical Linear Modelling for EEG</a></p>
+							      <p>-<a href="https://drive.google.com/file/d/151mboLQ3rmOPp5qQuwB9haJbjuTDQulk/view?usp=sharing" target="_blank">LIMO contrasts</a></p>
+										<p>-<a href="https://drive.google.com/file/d/1Ju-86hqUaZSGiQ_aw9-UeMo6CSm0w7Tb/view?usp=sharing" target="_blank">Multiple comparisons correction</a></p>
+									</div>
+  						  </div>
+							</div>
+							<hr>
 
 
-</div>
+				<!-- footer -->
+				<footer>
+				<div class="container">
+				<!-- This theme comes under Creative Commons Attribution 4.0 Unported. So don't remove below link back -->
+				<p class="copy-right">Copyright &copy; 2020 <a href="https://cpernet.github.io/">https://cpernet.github.io/</a> | Designed By : <a href="http://www.indioweb.in/portfolio">IndioWeb</a>, All rights reserved. </p>
+				</div>
+				</footer>
+				</div>
 
-<div id="footer">
-Last update: February 2013
-Copyright &copy; 2005 (Cyril Pernet). Design by <a href="http://andreasviklund.com">Andreas Viklund</a>.
-</div>
-
-</div>
-</body>
-</html>
+				<!-- Javascript files -->
+				<!-- jQuery -->
+				<script src="js/jquery.js"></script>
+				<!-- Bootstrap JS -->
+				<script src="js/bootstrap.min.js"></script>
+				<!-- Respond JS for IE8 -->
+				<script src="js/respond.min.js"></script>
+				<!-- HTML5 Support for IE -->
+				<script src="js/html5shiv.js"></script>
+				<!-- Custom JS -->
+				<script src="js/custom.js"></script>
+				</body>
+				</html>

@@ -1,65 +1,360 @@
-﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<!DOCTYPE html>
+<html>
 <head>
-<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-<meta name="description" content="Personal website ; info on my research, fMRI, EEG-MEG, neurophysiology, statistics, and Matlab and SPM tools" />
-<meta name="keywords" content="Cyril Pernet Personal fMRI SPM scripts EEG MEG BOLD GLM Neurophysiology Matlab" />
-<meta name="author" content="Cyril Pernet  / Original design: Andreas Viklund - http://andreasviklund.com/" />
-<link rel="stylesheet" type="text/css" href="andreas02.css" media="screen" title="andreas02 (screen)" />
-<link rel="stylesheet" type="text/css" href="print.css" media="print" />
-<title>Cyril Pernet Personal website</title>
+	<meta charset="utf-8">
+	<title>Cyril Pernet - Powered By IndioWeb.in</title>
+	<!-- Description, Keywords and Author -->
+	<meta name="description" content="Personal website ; info on my research and other useful neuro-imaging and statistical tips">
+	<meta name="keywords" content="Cyril Pernet, Matlab, Statistics, GLM, fMRI, EEG">
+	<meta name="author" content="Cyril Pernet & ResponsiveWebInc">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<!-- Styles -->
+	<!-- Bootstrap CSS -->
+	<link href="css/bootstrap.min.css" rel="stylesheet">
+	<!-- Font awesome CSS -->
+	<link href="css/fontawesome.min.css" rel="stylesheet">
+	<!-- Custom CSS -->
+	<link href="css/style.css" rel="stylesheet">
+
+	<!-- my style overwrite for hyperlinks -->
+	<style>
+	a:link {
+		color: orange;
+		background-color: transparent;
+		text-decoration: none;
+	}
+
+	a:visited {
+		color: red;
+		background-color: transparent;
+		text-decoration: none;
+	}
+
+	a:hover {
+		color: blue;
+		background-color: transparent;
+		text-decoration: underline;
+	}
+
+	a:active {
+		color: cyan;
+		background-color: transparent;
+		text-decoration: underline;
+	}
+</style>
+
+<!-- Favicon -->
+<link rel="shortcut icon" href="#">
 </head>
 
-<body><div id="wrap">
+<body>
 
-<div id="header">
-<h1>Cyril Pernet, PhD</h1>
-<p><strong> « La science ne s'établissant que par comparaison, la connaissance de l'état pathologique ou anormal ne saurait être obtenue sans la connaissance de l'état  normal »</strong>- <strong>Claude Bernard</strong></p>
-</div>
-<img src="gfx/gfx_index.jpg" alt="" width="759" height="161" />
-<div id="avmenu">
-  <h2 class="hide">Menu:</h2>
-<ul>
-<li><a href="index.html">Home</a></li>
-<li><a href="teaching.html">Teaching</a></li>
-<li><a href="Downloads.html">Downloads</a></li>
-<li><a href="fMRI.html">fMRI </a></li>
-<li><a href="MEEG.html">Neurophysio</a></li>
-<li><a href="Stats.html">Statistics</a></li>
-</ul>
+	<div class="wrapper">
+		<!-- header -->
+		<header>
+			<!-- navigation -->
+			<nav class="navbar navbar-default" role="navigation">
+				<div class="container">
+					<!-- Brand and toggle get grouped for better mobile display -->
+					<div class="navbar-header">
+						<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+							<span class="sr-only">Toggle navigation</span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+						</button>
+						<a class="navbar-brand" href="#"><img class="img-responsive" src="img/me.jpg" alt="me" /></a>
+					</div>
 
-<div class="announce">
-<h3>Latest news:</h3>
-<p align="left"><a href="https://docs.google.com/document/d/1ArMZ9Y_quTKXC-jNXZksnedK2VHHoKP3HCeO5HPcgLE/comment" target="new">BIDS EEG</a> is almost ready - everyone is welcome to contribute</p>
-<p align="left">Meta-analysis of brain imaging genetics - <a href="https://www.ncbi.nlm.nih.gov/pubmed/28949821" target="new">logical and methodological issues</a></p>
-<p align="left">Stop looking at means and analyse distributions - <a href="https://onlinelibrary.wiley.com/doi/abs/10.1111/ejn.13610" target="new">check out this paper (with Matlab and R code)</a></p>
-<p align="left">&nbsp;</p>
-<p class="textright">&nbsp;</p>
-</div>
+					<!-- Collect the nav links, forms, and other content for toggling -->
+					<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+						<ul class="nav navbar-nav">
+							<li class="active"><a href="index.html">Overview</a></li>
+							<li class="dropdown">
+								<a href="#" class="dropdown-toggle" data-toggle="dropdown">NeuroImaging & Statistics <span class="caret"></span></a>
+								<ul class="dropdown-menu" role="menu">
+									<li><a href="mri.html">MRI-fMRI</a></li>
+									<li><a href="meeg.html">MEEG</a></li>
+									<li class="divider"></li>
+									<li><a href="stats_dsp.html">Statistics & DSP</a></li>
+								</ul>
+							</li>
+							<li><a href="skills.html">About me</a></li>
+							<li><a href="https://github.com/CPernet?tab=repositories" target="_blank">Downloads</a></li>
+							<li><a href="Projects.html">Join in projects</a></li>
+						</ul>
+					</div><!-- /.navbar-collapse -->
+				</div><!-- /.container-fluid -->
+			</nav>
+		</header>
 
-</div>
-<div id="extras">
-<h3>&nbsp;</h3>
-<h3>
-<p><a href="http://neurostatscyrilpernet.blogspot.co.uk/?view=sidebar" target="new"><img src="gfx/blogspot.jpg" alt="" width="83" height="90" align="middle" /></a></p>
-<p><a href="https://twitter.com/CyrilRPernet" target="new"><img src="gfx/twitter.png" alt="" width="83" height="83" /></a>
-<p><a href="http://scholar.google.co.uk/citations?user=yz6s_e8AAAAJ&amp;hl=en" target="new"><img src="gfx/google_scholar.gif" alt="" width="100" height="21" align="absmiddle" /></a><span id='badgeCont826721' style='width:126px'>
-</span></div>
-<div id="content">
-<h2>Home</h2>
-<p>Welcome on my personal personal website.</p>
-<p align="justify"> I  keep here things which are of interest for my research and might be of interest to others; in particular <a href="fMRI2.html">guidelines for writing fMRI articles</a>, information about <a href="fMRI3.html">fMRI designs</a>, the<a href="fMRI4.html"> BOLD signal</a>, <a href="MEEG2.html">neurophysiology</a> (neural histology, communication, relation to the vasular system and neuro-glia) and my favorite, <a href="Stats.html">statistics</a>. </p>
-<p align="justify">I also write a lot of code in Matlab, for statistics, fMRI and EEG with several projects of toolboxes etc. Not everything is open access yet, but it's getting there ..  check also my <a href="Downloads.html">download page</a>.</p>
-<p>Some of these codes find there way into <a href="teaching.html">lectures</a>, some of them might of interest for junior neuro-imagers and neuro-scientists.</p>
+		<!-- main content -->
+		<div class="main-content bottom-0">
+			<div class="container">
+				<!-- banner -->
+				<div class="banner pad">
+					<!-- heading -->
+					<h2><span>Dr Cyril Pernet</span></h2>
+					<!-- paragraph -->
+					<p style="color:white">Gathering my thoughs, projets & teachings.</p>
+					<p style="color:white">Follow me <a href="https://twitter.com/CyrilRPernet" target"_blank">on twitter</a></p>
+				</div>
+			</div>
 
+			<!-- hero -->
+			<div class="hero pad">
+				<div class="container">
+					<div class="hero-content">
+						<!-- heading -->
+						<h2>Every brain imager loves methods</h2>
+						<!-- paragraph -->
+						<p>I have been working on a variety of method related projects, all open:
+							browse, use, re-use or join</p>
+						<!-- button -->
+						<a href="https://github.com/CPernet?tab=repositories" target="_blank"
+						class="btn btn-warning">Explore and Join my Projects on GitHub</a>
+					</div>
+				</div>
+			</div>
 
-</div>
+			<!-- publications -->
+			<div class="benefits pad">
+				<div class="container">
+					<div class="default-heading">
+						<!-- heading -->
+						<h2>Recent publications</h2>
+					</div>
+					<div class="row">
+						<div class="col-md-3 col-sm-6">
+							<!-- benefits item -->
+							<div class="benefits-item">
+								<!-- heading -->
+								<h3>OHBM MEEG guidelines</h3>
+								<!-- paragraph -->
+								<p>It has been a privilege to co-chair the
+									<a href="https://cobidasmeeg.wordpress.com/" target="_blank">MEEG COBIDAS</a>
+									now summarized in our
+									<a href="https://www.nature.com/articles/s41593-020-00709-0" target="_blank">Nature Neuroscience paper</a></p>
+								</div>
+							</div>
+							<div class="col-md-3 col-sm-6">
+								<!-- benefits item -->
+								<div class="benefits-item">
+									<!-- heading -->
+									<h3>Genetics-BIDS extension</h3>
+									<!-- paragraph -->
+									<p>Our latest <a href="https://bids-specification.readthedocs.io/en/v1.3.0/04-modality-specific-files/08-genetic-descriptor.html" target="_blank">BIDS</a>
+										work on adding Genetics metadata and links to your neuroimaging data now in
+										<a href="https://academic.oup.com/gigascience/article/9/10/giaa104/5928221" target="_blank">GigaScience</a></p>
+								</div>
+							</div>
+							<div class="col-md-3 col-sm-6">
+								<!-- benefits item -->
+								<div class="benefits-item">
+									<!-- heading -->
+									<h3>Mindfulness Systematic Review and Meta-analysis</h3>
+									<!-- paragraph -->
+									<p>Great work from 2 students looking at
+										<a href="https://www.medrxiv.org/content/10.1101/2020.03.31.20049510v1.full.pdf" target="_blank">
+											grey matter changes due to mindfulness practice</a></p>
+								</div>
+							</div>
+							<div class="col-md-3 col-sm-6">
+								<!-- benefits item -->
+								<div class="benefits-item">
+									<!-- heading -->
+									<h3>How do MRI anatomical packages deal with variablility?</h3>
+									<!-- paragraph -->
+									<p>Last paper from my former PhD student comparing
+										<a href="https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-019-2609-8" target="_blank">
+											FreeSurfer (DK and DKT) and BrainSuite</a></p>
+										</div>
+							</div>
+						</div>
+					</div>
+				</div>
 
-<div id="footer">
-Last update: April  2018
-Copyright &copy; 2005 (Cyril Pernet). Design by <a href="http://andreasviklund.com">Andreas Viklund</a>.
-</div>
+				<!-- call to action -->
+				<div class="cta">
+					<div class="container">
+						<div class="cta-content">
+							<!-- heading -->
+							<h3>List of all publications</h3>
+							<!-- paragraph -->
+							<p>	<a href="publications.html">
+								with links to preprints or papers when available</a></p>
+						</div>
+					</div>
+				</div>
 
-</div>
-</body>
-</html>
+				<!-- testimonial -->
+				<div class="testimonial">
+					<div class="container">
+						<div id="carousel-generic" class="carousel slide" data-ride="carousel">
+
+							<!-- Wrapper for slides -->
+							<div class="carousel-inner">
+								<div class="item active pad">
+									<!-- heading -->
+									<h3 style="color:white">@BIDSstandard</h3>
+									<!-- paragraph -->
+									<p style="color:white">New BIDS Specification version release!
+										<a href="https://bids-specification.readthedocs.io/en/stable/" target="_blank">BIDS v1.4.1</a>
+									</p>
+								</div>
+								<div class="item pad">
+									<!-- heading -->
+									<h3 style="color:white">@OHBM</h3>
+									<!-- paragraph -->
+									<p style="color:white">How-To tutorial : <a href="https://www.ohbmbrainmappingblog.com/blog/ohbm-on-demand-how-to-reproducibility-and-good-neuroimaging-practices" target="_blank">
+										Reproducibility and Good Neuroimaging practices.</a>
+										Featuring my educational workshops!</p>
+								</div>
+								<div class="item pad">
+									<!-- heading -->
+									<h3 style="color:white">@eeglab2</h3>
+									<!-- paragraph -->
+									<p style="color:white"> Series of videos on the Brain Imaging Data Structure and
+										<a href="https://www.youtube.com/playlist?list=PLXc9qfVbMMN3II4EnVQNjOeVl-UprWlnM" target="_blank">
+										how to import/export/process BIDS EEG data in EEGLAB.</a>
+									  See how to include it in your 100% reproducible pipeline
+								    in <a href="https://www.youtube.com/watch?v=fx6KIOh-jk0" target="_blank"> my #neuromatch talk</a></p>
+								</div>
+							</div>
+
+							<!-- Controls -->
+							<a class="left carousel-control" href="#carousel-generic"
+							role="button" data-slide="prev">
+								<span class="fa fa-chevron-left" style="color:white"></span>
+							</a>
+							<a class="right carousel-control" href="#carousel-generic"
+							role="button" data-slide="next">
+								<span class="fa fa-chevron-right" style="color:white"></span>
+							</a>
+						</div>
+					</div>
+				</div>
+
+				<!-- blog -->
+				<div class="blog pad">
+					<div class="container">
+						<div class="default-heading">
+							<!-- heading -->
+							<h2>Recent Blogs</h2>
+						</div>
+						<div class="row">
+							<div class="col-md-6">
+								<!-- blog entry -->
+								<div class="entry">
+									<!-- blog post image -->
+									<div class="entry-pic">
+										<img class="img-responsive" src="img/blog/1.jpg" alt="Blog Image" />
+									</div>
+									<!-- blog content details -->
+									<div class="entry-post">
+										<!-- blog information -->
+										<span class="meta">Whole EEG sensor space analysis</span>
+										<!-- blog title -->
+										<h3> <a href="https://neurostatscyrilpernet.blogspot.com/2019/06/bootstrapping-and-multiple-comparisons.html?view=timeslide">
+											Bootstrapping and multiple comparisons correction in EEG</a></h3>
+										<!-- paragraph -->
+										<p>A Matlab tutorial for bootstrapping with an introduction to multiple comparisons correction in EEG.</p>
+									</div>
+									<div class="clearfix"></div>
+								</div>
+							</div>
+							<div class="col-md-6">
+								<!-- blog entry -->
+								<div class="entry">
+									<!-- blog post image -->
+									<div class="entry-pic">
+										<img class="img-responsive" src="img/blog/2.jpg" alt="Blog Image" />
+									</div>
+									<!-- blog content details -->
+									<div class="entry-post">
+										<!-- blog information -->
+										<span class="meta">GDPR in a nutshell </span>
+										<!-- blog title -->
+										<h3><a href="https://neurostatscyrilpernet.blogspot.com/2018/05/gdpr-for-open-brain-imaging.html?view=timeslide">
+											GDPR for open brain imaging</a></h3>
+										<!-- paragraph -->
+										<p>What it means for research to protect privacy?</p>
+									</div>
+									<div class="clearfix"></div>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-6">
+								<!-- blog entry -->
+								<div class="entry">
+									<!-- blog post image -->
+									<div class="entry-pic">
+										<img class="img-responsive" src="img/blog/3.jpg" alt="Blog Image" />
+									</div>
+									<!-- blog content details -->
+									<div class="entry-post">
+										<!-- blog information -->
+										<span class="meta">How do sofware make brain parcels?</span>
+										<!-- blog title -->
+										<h3> <a href="https://neurostatscyrilpernet.blogspot.com/2019/01/assessing-anatomical-brain-parcellation.html?view=timeslide">
+											Assessing anatomical brain parcellation</a></h3>
+										<!-- paragraph -->
+										<p>Making sure the right regions and borders are obtained is essential for morphometry, ROI analyses and connectivity</p>
+									</div>
+									<div class="clearfix"></div>
+								</div>
+							</div>
+							<div class="col-md-6">
+								<!-- blog entry -->
+								<div class="entry">
+									<!-- blog post image -->
+									<div class="entry-pic">
+										<img class="img-responsive" src="img/blog/4.jpg" alt="Blog Image" />
+									</div>
+									<!-- blog content details -->
+									<div class="entry-post">
+										<!-- blog information -->
+										<span class="meta">Should we use quotas?</span>
+										<!-- blog title -->
+										<h3><a href="https://neurostatscyrilpernet.blogspot.com/2018/07/encouraging-diversity-in-science.html?view=timeslide">
+											Encouraging diversity in science</a></h3>
+										<!-- paragraph -->
+										<p>Discussing Equality vs Equity</p>
+									</div>
+									<div class="clearfix"></div>
+								</div>
+							</div>
+						</div>
+						<div class="blog-btn">
+							<!-- button -->
+							<a href="https://neurostatscyrilpernet.blogspot.com/?view=timeslide" target="_blank" class="btn btn-warning">Read More Blogs</a>
+						</div>
+					</div>
+				</div>
+
+			</div>
+
+			<!-- footer -->
+			<footer>
+				<div class="container">
+					<!-- This theme comes under Creative Commons Attribution 4.0 Unported. So don't remove below link back -->
+					<p class="copy-right">Copyright &copy; 2020 <a href="https://cpernet.github.io/">https://cpernet.github.io/</a> | Designed By : <a href="http://www.indioweb.in/portfolio">IndioWeb</a>, All rights reserved. </p>
+				</div>
+			</footer>
+		</div>
+
+		<!-- Javascript files -->
+		<!-- jQuery -->
+		<script src="js/jquery.js"></script>
+		<!-- Bootstrap JS -->
+		<script src="js/bootstrap.min.js"></script>
+		<!-- Respond JS for IE8 -->
+		<script src="js/respond.min.js"></script>
+		<!-- HTML5 Support for IE -->
+		<script src="js/html5shiv.js"></script>
+		<!-- Custom JS -->
+		<script src="js/custom.js"></script>
+	</body>
+	</html>

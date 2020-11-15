@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Cyril Pernet - Powered By IndioWeb.in</title>
+	<!-- Description, Keywords and Author -->
+	<meta name="description" content="Personal website, skills, CV ">
+	<meta name="keywords" content="Cyril Pernet, Matlab, Statistics, GLM, fMRI, EEG">
+	<meta name="author" content="Cyril Pernet & ResponsiveWebInc">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<!-- Styles -->
+	<!-- Bootstrap CSS -->
+	<link href="css/bootstrap.min.css" rel="stylesheet">
+	<!-- Font awesome CSS -->
+	<link href="css/fontawesome.min.css" rel="stylesheet">
+	<!-- Custom CSS -->
+	<link href="css/style.css" rel="stylesheet">
+
+	<!-- my style overwrite for hyperlinks -->
+	<style>
+	a:link {
+		color: orange;
+		background-color: transparent;
+		text-decoration: none;
+	}
+
+	a:visited {
+		color: red;
+		background-color: transparent;
+		text-decoration: none;
+	}
+
+	a:hover {
+		color: blue;
+		background-color: transparent;
+		text-decoration: underline;
+	}
+
+	a:active {
+		color: cyan;
+		background-color: transparent;
+		text-decoration: underline;
+	}
+</style>
+
+<!-- Favicon -->
+<link rel="shortcut icon" href="#">
+</head>
+
+<body>
+
+	<div class="wrapper">
+		<!-- header -->
+		<header>
+			<!-- navigation -->
+			<nav class="navbar navbar-default" role="navigation">
+				<div class="container">
+					<!-- Brand and toggle get grouped for better mobile display -->
+					<div class="navbar-header">
+						<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+							<span class="sr-only">Toggle navigation</span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+						</button>
+						<a class="navbar-brand" href="#"><img class="img-responsive" src="img/me.jpg" alt="me" /></a>
+					</div>
+
+					<!-- Collect the nav links, forms, and other content for toggling -->
+					<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+						<ul class="nav navbar-nav">
+							<li><a href="index.html">Overview</a></li>
+							<li class="dropdown">
+								<a href="#" class="dropdown-toggle" data-toggle="dropdown">NeuroImaging & Statistics <span class="caret"></span></a>
+								<ul class="dropdown-menu" role="menu">
+									<li class="active"><a href="mri.html">MRI-fMRI</a></li>
+									<li><a href="meeg.html">MEEG</a></li>
+									<li class="divider"></li>
+									<li><a href="stats_dsp.html">Statistics & DSP</a></li>
+								</ul>
+							</li>
+							<li><a href="skills.html">About me</a></li>
+							<li><a href="https://github.com/CPernet?tab=repositories" target="_blank">Downloads</a></li>
+							<li><a href="Projects.html">Join in projects</a></li>
+						</ul>
+					</div><!-- /.navbar-collapse -->
+				</div><!-- /.container-fluid -->
+			</nav>
+		</header>
+
+		<!-- main content -->
+		<div class="main-content bottom-0">
+			<div class="container">
+				<!-- banner -->
+				<div class="banner pad">
+					<!-- heading -->
+					<h2><span>Dr Cyril Pernet</span></h2>
+					<!-- paragraph -->
+					<p style="color:white">functional MRI</p>
+					<p style="color:white"><a href="#designs">Designs,</a>
+						<a href="#QA">QA,</a>
+						<a href="#stats">Stats,</a>
+					  <a href="#lectures">Lectures</a></p>
+				</div>
+			</div>
+
+			<!-- CV -->
+			<div class="cv pad">
+				<div class="container">
+					<div class="cv-item">
+						<div class="row">
+							<div class="col-md-12 col-sm-6">
+								<!-- benefits item -->
+								<div class="cv-item">
+									<!-- heading -->
+									<h2>Foreword</h2>
+									<!-- paragraph -->
+									<p>- Most of the things you need to think about are described in the OHBM
+										<a href="https://www.biorxiv.org/content/10.1101/054262v2" target="_blank">MRI COBIDAS.</a></p>
+										<p>To understand to subtilities of designs, QA and stats, you need some basic understanding of how MRI works.
+											You can check this <a href="https://drive.google.com/file/d/1VoB3QwHQ3-fGM1IpDmcM1Q5hopIa3c80/view?usp=sharing" target="_blank">lecture</a>
+											I made a long time ago, assuming the univese hasn't change, the MRI physics should still hold.</a></p>
+
+									<!-- heading -->
+									<h2><a name="designs"></a>Experimental Designs</h2>
+									<!-- paragraph -->
+									<p>Functional MRI designs are more complicated than behavioral experimental designs as, in
+										same time as thinking about experimental effects, we have to think about fMRI acquisition parameters.
+										I present here key notions on the different types of fMRI designs (blocks, event related, mixed) and clues to
+										'optimize' these designs.</p>
+									<br>
+									<p> There are 3 main types of design: blocked, event-related or mixed. This classification operates on the way stimuli are presented.
+										The optimization of these designs refers mainly on how to increase their power. Here, I discuss optimization of stimulus related parameters.</p>
+
+											<!-- heading -->
+											<h3>Block designs</h3>
+											<!-- paragraph -->
+											<p> Block designs are well suited to localize functional areas and study steady state processes (e.g. attention).
+												One can distinguish alternating blocks from controlled block designs. Alternating designs: conditions A and B are alternated in distinct blocks
+												which is useful for determining which voxels show differential activity as a function of the variables (i.e. the difference between A & B).
+												Controlled block designs: conditions A and B are separated by null-blocks, i.e. a control condition C.
+												which allows the identification, in addition, of voxels activated by each condition separately and in both conditions.</p>
+												<br><img src="img\fmri\design1.jpg" alt="block designs"><br>
+												<p> Block designs are powerful in terms of detection, i.e. to determine which voxels are activated. The advantage of short ISI is that the response is greater
+													than for long ISI because responses to different stimuli summate thus increasing the response amplitude. On the other hand, because of summation of the hemodynamic
+													responses iin time, block designs have a poor estimation power, i.e. a weak ability to determine the time course of the response.</p>
+													<br><figure>
+														<img src="img\fmri\design2.jpg" alt="hrf summation">
+														<figcaption>Example of hrf summation: 1 stimulus every 1 sec / 3 sec / 5 sec (TR: 2.5 sec Highpass filter: 128Hz).</figcaption>
+													</figure><br>
+													<p> <strong>Optimization:</strong> Signal strength varies with the length of blocks. With short blocks (less than 10s), the signal does not return to baseline during null-blocks
+														decreasing the strength of the signal. With long block lengths, a large response is evoked during the task blocks and the response returns to baseline during null-blocks.
+														However, the detection power increases with high frequency alternation because i) it depends on the number of events/blocks and ii) the noise in the BOLD time course which occurs
+														mainly at low frequencies. Blocks with durations longer than the hemodynamic response reach a compromise between signal strength and noise (optimal 16s)</p>
+														<br><img src="img\fmri\design3.jpg" alt="Optimization">
+
+											<!-- heading -->
+											<h3>Event related deasigns</h3>
+											<!-- paragraph -->
+											<p> Each event is separated in time by an inter-stimulus interval ranging from few sec to tens of seconds. Event related designs are based on the assumption that neural activity
+												will occur for short and discrete intervals. Such designs attempt to measure transient changes in brain activity. Unlike blocked designs, stimuli are presented in a random order
+											  rather than an alternating pattern offering a higher flexibility in experimental terms. Estimation power of event-related design is often good as they allow to inquire the hemodynamic
+												shape for each condition and compare parameters such as the amplitude or the timing between conditions. By contrast, the detection power is relatively weak in comparison with blocked design.
+												This is explained by the simple fact that experimental power depends on the number of events that are averaged.</p>
+												<br><img src="img\fmri\design4.jpg" alt="Periodic event related design"><br>
+												In rapid event related designs, stimuli are closely spaced in time, i.e. there is an overlap of the hemodynamic responses. Raw signal is often uninterpretable but trials can be in a total random
+												sequence such as it is highly resistant to habituation, set, and expectation. By introducing ‘null events’ one creates differential ISI, i.e. differential overlaps between hemodynamic responses
+												which allows a full characterization of this response. Different techniques exist to 'randomize' the stimuli alternation.</p>
+												<br><p><strong>Randomized designs</strong> rely on the likelihood of a stimulus being presented at each time point.</p>
+												<p><strong>Stationary stochastic designs</strong> rely on the likelihood of a given ISI following each stimulus ('jittered' designs).</p>
+												<p><strong>Dynamic stochastic designs</strong> rely on the systematic probability variation of stimuli over time ('semi-random' designs)</p>
+												<img src="img\fmri\design5.jpg" alt="randomized event related designs">
+
+												<p><strong>Adaptation designs</strong><br>
+												<p>fMRI adaptation designs (afMRI) use the refractory period to enquire functional differences within a given region. The predicted hemodynamic response relies often on a linear prediction.
+													This means that for an impulse (a short-duration stimulus), the hemodynamic system responds in the same manner. The parameters of the hemodynamic response are then directly interpreted as reflecting
+													both the intensity and the duration of the neural response given the scaling (the magnitude of the system output is proportional to the system input) and superposition (the total response to a set of
+													inputs is the sum of individual inputs) properties of linear systems. The hemodynamic response is linear for ISI > 6s and nearly linear down to ISI ~ 3/4s. If the ISI is short, the response to a
+													subsequent stimuli is weaker than for a longer ISI (Boynton and al., 1996, J Neurosci 16, 4207-4221; Dale & Buckner, 1997, Hum Br Map 5, 329-340). This phenomenon is known as the hemodynamic refractory
+													period. Such a refractory period has been used to investigate neural adaptation effects.</p>
+													<br><figure>
+														<img src="img\fmri\design7.jpg" alt="BOLD adaptation">
+														<figcaption> Case A: object 1/2/3, ISI 2s, all same orientation = neurons that code objects. It exists an adaptation effect such as for one simulus the BOLD response = 0.21, for two stimuli = 0.38
+															and for three stimuli = =0.49. Case B: object1/2/3, ISI 2s, the last one has different orientation – If the neural coding is different, for objects of different orientation there is no adaptation
+															and case B > case A. (BOLD=0.21+0.17+0.21=0.59).</figcaption>
+													</figure><br>
+													<p>Issue: an area showing an adaptation effect can receive inputs from an area which does code stimulus properties (real adaptation effect) but does not by itself has neural specificity.
+															Although most adaptation designs rely on some sort fast-event related designs, Aguirre (Aguirre, NeuroImage, 35, 2007) demonstrated that on can use a continuous stimulation where stimuli change their properties from one trial to the other, i.e. a design where we look at the effect of the previous stimulus on the current response (carry-over design). </p>
+
+												<!-- heading -->
+												<h3>Mixed designs</h3>
+												<!-- paragraph -->
+												<p>Stimuli are displayed in discrete blocks which allows investigating sustained processes and brain responses (state-related processes). This however is different from semirandom designs where, whatever the stimulation rate, we assume that the process is always the same (looking for transient activity for each stimulus). Within each block multiple types of events occurs and because there is different types of stimuli, transient responses are also likely to occurs. Therefore, mixed designs can investigate interaction between processes working at different time-scales.</p>
+												<img src="img\fmri\design6.jpg" alt="mixed deisgn"><br>
+
+								<!-- heading -->
+								<h2><a name="QA"></a>Quality Assurance and Noise</h2>
+								<!-- paragraph -->
+								<p>We are getting into the nitty-gritty of fMRI here. There are many aspect of the signal that needs to be quantified, from the raw data,
+									but also for the various stage of the data procesing workflow. I wrote about this in two blogs about
+								<a href="https://neurostatscyrilpernet.blogspot.com/2016/12/clean-bold-for-better-stats.html" target="_blank">Cleaning time series</a> and
+								<a href="https://neurostatscyrilpernet.blogspot.com/2016/12/clean-bold-for-better-stats.html" target="_blank">measure fmri noise</a>. There are
+								of course all the other usual <a href="https://neurostatscyrilpernet.blogspot.com/2016/12/minimizing-motion-artefacts-maybe.html" target="_blank">
+								motion artefacts</a> and associated metrics. Check out the <a href="https://github.com/CPernet/spmup/tree/master" target="_blank">SPMUP</a>
+      					project that tries to measure and incorporate all of that in your analyses.</p>
+
+								<!-- heading -->
+								<h2><a name="stats"></a>fMRI Statistics</h2>
+									<h3>Single subject thresholding - clinical application</h3>
+								  <!-- paragraph -->
+								  <p>At the subject level, the distributon of statistical values is not always central - i.e. centered on 0.
+								  	The implication of this is that thresholding can thus grossly under- or over- represent the effect. A proposed
+								    solution is to model the distribution as a mixture of a non central Gaussian (the null) and positive/negative
+								    Gamma distibutions for the tails (signitifcant activations/deactivations). Chosing the crossing point(s) of crossing
+									  distributions end-up separating signal to noise, obtimizing the false positives/false negative ratio.
+										See <a href="https://www.frontiersin.org/articles/10.3389/fnhum.2012.00245/full" target="_blank">Gorgolewski et al. 2012<a/> and get
+											the code for SPM <a href="https://github.com/CPernet/spmup/tree/master/adaptative_threshold" target="_blank">here</a>.</p>
+								<h3>Boosting your Beta estimates</h3>
+								<!-- paragraph -->
+								<p>A time series regressor models a given condition across trials, and it's fit thus represent the mean.
+								If the hrf is mis-specified starting for instance earlier than the standard model, adding the derivative gives a better model.
+				  			Only the combination of parameters gives a good model, the amplitude of the hrf is still wrong and need to be 'corrected'. You
+					  		can read more about this in the <a href="https://www.frontiersin.org/articles/10.3389/fnins.2014.00001/full" target="_blank">tutorial paper</a>,
+					  		and get code for SPM <a href="https://github.com/CPernet/spmup/tree/master/hrf" target="_blank">here</a></p>
+								 <h3>Computing the percentage signal change</h3>
+								  <!-- paragraph -->
+									<p>After convoluting the stimulus/condition/task regressors by the hrf, the design matrix doesn't scale to 1. This means
+										that the model parameters need to be rescaled do have a meaningful unit. Such unit can be 1, but also the maximum of a
+										reference trial or of the current design - this is as arbitrary as choosing to express a value in pounds, euros or dollars.
+										You can read more about this in the <a href="https://www.frontiersin.org/articles/10.3389/fnins.2014.00001/full" target="_blank">tutorial paper</a>,
+						  		and get code for SPM <a href="https://github.com/CPernet/spmup/blob/master/utlilities/spmup_psc.m" target="_blank">here</a></p>
+									</div>
+  						  </div>
+							</div>
+							<hr>
+
+							<div class="row">
+								<div class="col-md-12 col-sm-6">
+									<!-- benefits item -->
+									<div class="cv-item">
+										<!-- heading -->
+							      <h2><a name="lectures"></a>Lectures</h2>
+							      <!-- paragraph -->
+							      <p>You can access all my lectures slides here:</p>
+                    <p>-<a href="https://drive.google.com/file/d/0B5CS2-RHxR96d2FpeGpuMWlEejg/view?usp=sharing" target="_blank">Tissue Segmentation</a></p>
+							      <p>-<a href="https://drive.google.com/file/d/1i85D-1me4ufZO2KDkJa2TZU2plqm1O9n/view?usp=sharing" target="_blank">fMRI preprocessing</a></p>
+										<p>-<a href="https://drive.google.com/file/d/1rLRagQAcDN0n4VVm-_x-ATAoco01vD_b/view?usp=sharing" target="_blank">fMRI statistics and inference</a></p>
+										<p>-<a href="https://drive.google.com/file/d/17FhMKOsqsUAx1TBEOwfoFbiiMUlZ-8tv/view?usp=sharing" target="_blank">fMRI connectivity</a></p>
+									</div>
+  						  </div>
+							</div>
+							<hr>
+
+
+				<!-- footer -->
+				<footer>
+				<div class="container">
+				<!-- This theme comes under Creative Commons Attribution 4.0 Unported. So don't remove below link back -->
+				<p class="copy-right">Copyright &copy; 2020 <a href="https://cpernet.github.io/">https://cpernet.github.io/</a> | Designed By : <a href="http://www.indioweb.in/portfolio">IndioWeb</a>, All rights reserved. </p>
+				</div>
+				</footer>
+				</div>
+
+				<!-- Javascript files -->
+				<!-- jQuery -->
+				<script src="js/jquery.js"></script>
+				<!-- Bootstrap JS -->
+				<script src="js/bootstrap.min.js"></script>
+				<!-- Respond JS for IE8 -->
+				<script src="js/respond.min.js"></script>
+				<!-- HTML5 Support for IE -->
+				<script src="js/html5shiv.js"></script>
+				<!-- Custom JS -->
+				<script src="js/custom.js"></script>
+				</body>
+				</html>

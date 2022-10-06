@@ -1,0 +1,11 @@
+# Ideas about brain imaging experiments
+
+Writting sown idea I had while reading books and articles or listening to talks and podcasts.
+
+- Langage and Culture
+
+From listening to Lera Boroditsky on Hidden Brain podcast. Gender is attributed to objects in some languages and not others. Can we see gender differences in the brain using a large array of items? likely using representational similarity analysis -- need to groups of people (even maybe three, with a bilingual group).
+
+
+
+

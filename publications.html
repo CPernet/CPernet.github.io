@@ -320,6 +320,18 @@
         <input type="text" id="m-journal" />
       </div>
       <div class="form-group">
+        <label for="m-volume">Volume</label>
+        <input type="text" id="m-volume" placeholder="12" />
+      </div>
+      <div class="form-group">
+        <label for="m-issue">Issue</label>
+        <input type="text" id="m-issue" placeholder="3" />
+      </div>
+      <div class="form-group">
+        <label for="m-pages">Pages</label>
+        <input type="text" id="m-pages" placeholder="45-67" />
+      </div>
+      <div class="form-group">
         <label for="m-topic">Topic *</label>
         <select id="m-topic"><!-- populated from TOPICS --></select>
       </div>
@@ -675,7 +687,7 @@ function renderTable() {
       <td class="td-authors">${authorsHtml}</td>
       <td class="td-year">${p.year || "—"}</td>
       <td class="td-title">${titleHtml}</td>
-      <td class="td-journal">${escHtml(p.journal || "—")}</td>
+      <td class="td-journal">${formatJournal(p)}</td>
       <td class="td-actions">
         <button class="btn btn-edit" onclick="openEdit('${p.id}')" title="Edit">✏</button>
         <button class="btn btn-danger" onclick="removeEntry('${p.id}')" title="Remove">✕</button>
@@ -736,6 +748,16 @@ document.getElementById("pub-tbody").addEventListener("click", e => {
     }
   });
 });
+
+function formatJournal(p) {
+  let s = escHtml(p.journal || "");
+  if (p.volume) {
+    s += ", <em>" + escHtml(p.volume) + "</em>";
+    if (p.issue) s += "(" + escHtml(p.issue) + ")";
+  }
+  if (p.pages) s += ":" + escHtml(p.pages);
+  return s || "—";
+}
 
 function escHtml(str) {
   return String(str)
@@ -799,6 +821,9 @@ function openEdit(id) {
   document.getElementById("m-authors").value = (p.authors || []).join(", ");
   document.getElementById("m-year").value    = p.year    || "";
   document.getElementById("m-journal").value = p.journal || "";
+  document.getElementById("m-volume").value  = p.volume  || "";
+  document.getElementById("m-issue").value   = p.issue   || "";
+  document.getElementById("m-pages").value   = p.pages   || "";
   document.getElementById("m-topic").value   = p.topic   || "other";
   document.getElementById("m-doi").value     = p.doi     || "";
   document.getElementById("m-pmid").value    = p.pmid    || "";
@@ -818,7 +843,7 @@ function closeModal() {
 document.getElementById("add-btn").addEventListener("click", () => {
   editingId = null;
   document.getElementById("modal-title").textContent = "Add publication";
-  ["m-title","m-authors","m-year","m-journal","m-doi","m-pmid"].forEach(id =>
+  ["m-title","m-authors","m-year","m-journal","m-volume","m-issue","m-pages","m-doi","m-pmid"].forEach(id =>
     document.getElementById(id).value = "");
   document.getElementById("m-topic").value  = CONFIG.TOPICS[0]?.id || "other";
   document.getElementById("m-source").value = "manual";
@@ -843,6 +868,9 @@ document.getElementById("modal-save").addEventListener("click", () => {
     lastAuthor:  authors[authors.length - 1] || "",
     year:        document.getElementById("m-year").value.trim(),
     journal:     document.getElementById("m-journal").value.trim(),
+    volume:      document.getElementById("m-volume").value.trim(),
+    issue:       document.getElementById("m-issue").value.trim(),
+    pages:       document.getElementById("m-pages").value.trim(),
     topic:       document.getElementById("m-topic").value,
     doi:         document.getElementById("m-doi").value.trim(),
     pmid:        document.getElementById("m-pmid").value.trim(),
@@ -869,7 +897,10 @@ function formatAPA(p) {
   const doi     = p.doi
     ? "https://doi.org/" + p.doi.replace(/^https?:\/\/doi\.org\//, "")
     : "";
-  return [authors, year, (p.title || "Untitled") + ".", p.journal || "", doi]
+  let journalRef = p.journal || "";
+  if (p.volume) { journalRef += ", " + p.volume; if (p.issue) journalRef += "(" + p.issue + ")"; }
+  if (p.pages)  journalRef += ", " + p.pages;
+  return [authors, year, (p.title || "Untitled") + ".", journalRef, doi]
     .filter(Boolean).join(" ");
 }
 
@@ -877,8 +908,11 @@ function formatAPA(p) {
 function formatBibTeX(p, idx) {
   const key    = (p.authors?.[0] || "Unknown").replace(/\s+/g, "") + (p.year || "0000") + idx;
   const author = (p.authors || []).join(" and ");
-  const doiLine = p.doi ? `\n  doi       = {${p.doi}},` : "";
-  return `@article{${key},\n  author    = {${author}},\n  title     = {${p.title || ""}},\n  journal   = {${p.journal || ""}},\n  year      = {${p.year || ""}},${doiLine}\n}`;
+  const doiLine    = p.doi    ? `\n  doi       = {${p.doi}},`    : "";
+  const volumeLine = p.volume ? `\n  volume    = {${p.volume}},` : "";
+  const numberLine = p.issue  ? `\n  number    = {${p.issue}},`  : "";
+  const pagesLine  = p.pages  ? `\n  pages     = {${p.pages}},`  : "";
+  return `@article{${key},\n  author    = {${author}},\n  title     = {${p.title || ""}},\n  journal   = {${p.journal || ""}},\n  year      = {${p.year || ""}},${volumeLine}${numberLine}${pagesLine}${doiLine}\n}`;
 }
 
 // RIS
@@ -888,6 +922,9 @@ function formatRIS(p) {
   if (p.year)    lines.push(`PY  - ${p.year}`);
   if (p.title)   lines.push(`TI  - ${p.title}`);
   if (p.journal) lines.push(`JO  - ${p.journal}`);
+  if (p.volume)  lines.push(`VL  - ${p.volume}`);
+  if (p.issue)   lines.push(`IS  - ${p.issue}`);
+  if (p.pages)   lines.push(`SP  - ${p.pages}`);
   if (p.doi)     lines.push(`DO  - ${p.doi}`);
   if (p.pmid)    lines.push(`AN  - ${p.pmid}`);
   lines.push("ER  - ");
@@ -937,12 +974,12 @@ exportMenu.addEventListener("click", e => {
     triggerDownload(text, "publications.ris", "text/plain");
 
   } else if (fmt === "csv") {
-    const cols = ["#","Year","Authors","Title","Journal","Topic","DOI","PMID","First author","Last author"];
+    const cols = ["#","Year","Authors","Title","Journal","Volume","Issue","Pages","Topic","DOI","PMID","First author","Last author"];
     const esc  = v => `"${String(v || "").replace(/"/g, '""')}"`;
     const rows = list.map((p, i) => [
       i + 1, p.year,
       (p.authors || []).join("; "),
-      p.title, p.journal, p.topic, p.doi, p.pmid,
+      p.title, p.journal, p.volume, p.issue, p.pages, p.topic, p.doi, p.pmid,
       p.isFirst ? 1 : 0, p.isLast ? 1 : 0
     ].map(esc).join(","));
     triggerDownload([cols.map(esc).join(","), ...rows].join("\n"), "publications.csv", "text/csv");
@@ -1010,6 +1047,9 @@ async function fetchPubMed(authorName) {
       const year    = yearEl ? yearEl.textContent.slice(0, 4) : "";
       const doiEl   = art.querySelector("ArticleId[IdType='doi']");
       const doi     = doiEl ? doiEl.textContent : "";
+      const volume  = art.querySelector("JournalIssue Volume")?.textContent || "";
+      const issue   = art.querySelector("JournalIssue Issue")?.textContent || "";
+      const pages   = art.querySelector("MedlinePgn")?.textContent || "";
 
       const authorNodes = art.querySelectorAll("Author");
       const authors = Array.from(authorNodes).map(a => {
@@ -1022,6 +1062,7 @@ async function fetchPubMed(authorName) {
       results.push({
         id: "pm_" + pmid,
         pmid, title, journal, year, doi,
+        volume, issue, pages,
         authors,
         firstAuthor: authors[0] || "",
         lastAuthor:  authors[authors.length - 1] || "",
@@ -1056,11 +1097,14 @@ async function fetchSemanticScholar(authorName) {
     const { isFirst, isLast } = computeAuthorFlags(authors);
     const doi = p.externalIds?.DOI || "";
     const journal = p.journal?.name || "";
+    const volume  = p.journal?.volume || "";
+    const pages   = p.journal?.pages  || "";
     return {
       id: "ss_" + (p.paperId || uid()),
       pmid:   p.externalIds?.PubMed || "",
       title:  p.title || "",
       journal, year: String(p.year || ""),
+      volume, issue: "", pages,
       doi, authors,
       firstAuthor: authors[0] || "",
       lastAuthor:  authors[authors.length - 1] || "",
@@ -1101,6 +1145,9 @@ function mergeWithExisting(freshList) {
       if (!existing.doi     && p.doi)     existing.doi     = p.doi;
       if (!existing.pmid    && p.pmid)    existing.pmid    = p.pmid;
       if (!existing.journal && p.journal) existing.journal = p.journal;
+      if (!existing.volume  && p.volume)  existing.volume  = p.volume;
+      if (!existing.issue   && p.issue)   existing.issue   = p.issue;
+      if (!existing.pages   && p.pages)   existing.pages   = p.pages;
       // Never overwrite: topic (may be manually set), authors, title, year
     } else {
       publications.push(p);

@@ -1,0 +1,18 @@
+<header class="site-header">
+  <div class="container">
+    <a class="site-title" href="{{ '/' | relative_url }}">{{ site.title }}</a>
+    <nav class="site-nav" aria-label="Main navigation">
+      <ul role="list">
+        {% assign current_url = page.url | remove: 'index.html' %}
+        {% for item in site.data.nav %}
+        <li>
+          <a href="{{ item.url | relative_url }}"
+            {% if current_url == item.url %}aria-current="page"{% endif %}>
+            {{ item.title }}
+          </a>
+        </li>
+        {% endfor %}
+      </ul>
+    </nav>
+  </div>
+</header>

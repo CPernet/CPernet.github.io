@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
+  {% seo %}
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to content</a>
+  {% include header.html %}
+  <main id="main-content" tabindex="-1">
+    {{ content }}
+  </main>
+  {% include footer.html %}
+</body>
+</html>

@@ -1,0 +1,28 @@
+title: Cyril Pernet
+email: cyril.pernet@nru.dk
+description: >-
+  Personal website of Dr Cyril Pernet — research software, brain imaging
+  methods, statistics, and open science.
+url: "https://cpernet.github.io"
+baseurl: ""
+
+author:
+  name: Dr Cyril Pernet
+  position: Senior Research Software Developer
+  institution: Neurobiology Research Unit, Copenhagen
+
+plugins:
+  - jekyll-seo-tag
+
+markdown: kramdown
+kramdown:
+  input: GFM
+  hard_wrap: false
+highlighter: rouge
+
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - README.md
+  - .gitignore
+  - vendor/

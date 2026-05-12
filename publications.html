@@ -132,6 +132,14 @@
       display: inline-block; padding: 0.1rem 0.5rem; border-radius: 99px;
       font-size: 0.75rem; font-weight: 600; text-transform: uppercase;
       letter-spacing: 0.04em;
+      cursor: pointer;
+    }
+    .topic-badge:hover { opacity: 0.78; }
+    /* inline topic picker shown when badge is clicked */
+    .topic-picker {
+      font-size: 0.82rem; border: 1px solid #90cdf4; border-radius: 4px;
+      padding: 0.15rem 0.3rem; background: #fff; cursor: pointer;
+      outline: none;
     }
     .topic-method    { background: #bee3f8; color: #2c5282; }
     .topic-stats     { background: #c6f6d5; color: #22543d; }
@@ -431,11 +439,12 @@ function computeAuthorFlags(authors) {
   return { isFirst, isLast };
 }
 
-function topicBadge(topicId) {
+function topicBadge(pubId, topicId) {
   const topic = CONFIG.TOPICS.find(t => t.id === topicId);
   const label = topic ? topic.label : "Other";
   const cls   = topic ? `topic-${topicId}` : "topic-other";
-  return `<span class="topic-badge ${cls}">${label}</span>`;
+  // title attribute hints the user they can click to change topic
+  return `<span class="topic-badge ${cls}" data-pubid="${pubId}" title="Click to change topic">${label}</span>`;
 }
 
 function formatAuthors(authors) {
@@ -569,7 +578,7 @@ function renderTable() {
 
     return `<tr data-id="${p.id}">
       <td class="td-num">${i + 1}</td>
-      <td class="td-topic">${topicBadge(p.topic)}</td>
+      <td class="td-topic">${topicBadge(p.id, p.topic)}</td>
       <td class="td-authors">${authorsHtml}</td>
       <td class="td-year">${p.year || "—"}</td>
       <td class="td-title">${titleHtml}</td>
@@ -581,6 +590,57 @@ function renderTable() {
     </tr>`;
   }).join("");
 }
+
+// ── Inline topic picker ───────────────────────────────────────
+// Clicking a topic badge replaces it with a <select>; choosing a
+// value saves immediately and re-renders just that badge.
+document.getElementById("pub-tbody").addEventListener("click", e => {
+  const badge = e.target.closest(".topic-badge");
+  if (!badge) return;
+  const pubId = badge.dataset.pubid;
+  if (!pubId) return;
+
+  // Build inline select
+  const sel = document.createElement("select");
+  sel.className = "topic-picker";
+  for (const t of CONFIG.TOPICS) {
+    const opt = document.createElement("option");
+    opt.value = t.id;
+    opt.textContent = t.label;
+    sel.appendChild(opt);
+  }
+  const other = document.createElement("option");
+  other.value = "other"; other.textContent = "Other";
+  sel.appendChild(other);
+
+  const pub = publications.find(p => p.id === pubId);
+  if (pub) sel.value = pub.topic;
+
+  // Replace badge with select
+  badge.replaceWith(sel);
+  sel.focus();
+
+  function commit() {
+    const newTopic = sel.value;
+    if (pub) pub.topic = newTopic;
+    // Re-render only this cell to avoid full table repaint
+    const newBadge = document.createElement("span");
+    newBadge.outerHTML; // placeholder
+    const td = sel.parentElement;
+    if (td) td.innerHTML = topicBadge(pubId, newTopic);
+    updateStats();
+  }
+
+  sel.addEventListener("change", commit);
+  sel.addEventListener("blur",   commit);
+  sel.addEventListener("keydown", e => {
+    if (e.key === "Escape") {
+      // restore original badge without saving
+      const td = sel.parentElement;
+      if (td && pub) td.innerHTML = topicBadge(pubId, pub.topic);
+    }
+  });
+});
 
 function escHtml(str) {
   return String(str)

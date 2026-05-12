@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Publications – Cyril Pernet</title>
+  <style>
+    /* ── Base ─────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+        "Helvetica Neue", Arial, sans-serif;
+      font-size: 1rem;
+      line-height: 1.65;
+      color: #222;
+      background: #fff;
+    }
+    a { color: #2b6cb0; }
+    h1 { margin: 0 0 0.25rem; font-size: 1.9rem; letter-spacing: -0.03em; }
+
+    /* ── Layout ───────────────────────────────────────────── */
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 1.5rem; }
+    header.page-header {
+      border-bottom: 1px solid #e8e8e8;
+      padding: 1.5rem 0 1rem;
+      margin-bottom: 1.5rem;
+    }
+    header.page-header p { color: #555; margin: 0.25rem 0 0; font-size: 0.92rem; }
+
+    /* ── Search / controls bar ────────────────────────────── */
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem 1rem;
+      align-items: center;
+      margin-bottom: 1.25rem;
+    }
+    .controls label { font-size: 0.85rem; color: #555; }
+    .controls input[type="text"] {
+      padding: 0.35rem 0.65rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 0.9rem;
+      min-width: 180px;
+    }
+    .controls select {
+      padding: 0.35rem 0.55rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 0.9rem;
+      background: #fff;
+    }
+    .btn {
+      padding: 0.38rem 0.9rem;
+      border: none;
+      border-radius: 4px;
+      font-size: 0.88rem;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .btn-primary { background: #2b6cb0; color: #fff; }
+    .btn-primary:hover { background: #2558a3; }
+    .btn-secondary { background: #e2e8f0; color: #2d3748; }
+    .btn-secondary:hover { background: #cbd5e0; }
+    .btn-danger { background: #fc8181; color: #fff; font-size: 0.8rem; padding: 0.2rem 0.55rem; }
+    .btn-danger:hover { background: #f56565; }
+    .btn-edit { background: #f6e05e; color: #2d3748; font-size: 0.8rem; padding: 0.2rem 0.55rem; }
+    .btn-edit:hover { background: #ecc94b; }
+
+    /* ── Status / loader ──────────────────────────────────── */
+    #status {
+      font-size: 0.9rem; color: #555; margin-bottom: 0.75rem;
+      min-height: 1.4rem;
+    }
+    .spinner {
+      display: inline-block; width: 14px; height: 14px;
+      border: 2px solid #ccc; border-top-color: #2b6cb0;
+      border-radius: 50%; animation: spin 0.7s linear infinite;
+      vertical-align: middle; margin-right: 6px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── Stats strip ──────────────────────────────────────── */
+    #stats-bar {
+      display: flex; flex-wrap: wrap; gap: 1rem;
+      margin-bottom: 1rem; font-size: 0.88rem; color: #4a5568;
+    }
+    #stats-bar span strong { color: #1a202c; }
+
+    /* ── Filter chips ─────────────────────────────────────── */
+    .filter-chips { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1rem; }
+    .chip {
+      padding: 0.2rem 0.65rem; border-radius: 99px; font-size: 0.8rem;
+      cursor: pointer; border: 1px solid #ccc; background: #f7fafc; color: #2d3748;
+      transition: background 0.12s, border-color 0.12s;
+    }
+    .chip.active { background: #2b6cb0; color: #fff; border-color: #2b6cb0; }
+    .chip:hover:not(.active) { background: #ebf4ff; border-color: #90cdf4; }
+
+    /* ── Table ────────────────────────────────────────────── */
+    .table-wrap { overflow-x: auto; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+    }
+    thead th {
+      background: #f7fafc;
+      border-bottom: 2px solid #e2e8f0;
+      padding: 0.55rem 0.65rem;
+      text-align: left;
+      font-weight: 600;
+      white-space: nowrap;
+      cursor: pointer;
+      user-select: none;
+    }
+    thead th:hover { background: #ebf4ff; }
+    thead th .sort-icon { font-size: 0.7rem; margin-left: 3px; opacity: 0.5; }
+    thead th.sorted .sort-icon { opacity: 1; color: #2b6cb0; }
+    tbody tr { border-bottom: 1px solid #edf2f7; }
+    tbody tr:hover { background: #f7fafc; }
+    tbody td { padding: 0.5rem 0.65rem; vertical-align: top; }
+    .td-num   { width: 2.5rem; text-align: center; color: #718096; }
+    .td-topic { width: 7rem; }
+    .td-year  { width: 3.5rem; text-align: center; }
+    .td-title { min-width: 220px; }
+    .td-journal { min-width: 120px; color: #4a5568; }
+    .td-authors { min-width: 150px; }
+    .td-actions { width: 6rem; white-space: nowrap; }
+    .topic-badge {
+      display: inline-block; padding: 0.1rem 0.5rem; border-radius: 99px;
+      font-size: 0.75rem; font-weight: 600; text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .topic-method    { background: #bee3f8; color: #2c5282; }
+    .topic-stats     { background: #c6f6d5; color: #22543d; }
+    .topic-clinical  { background: #fed7e2; color: #702459; }
+    .topic-cog-neuro { background: #fefcbf; color: #744210; }
+    .topic-other     { background: #e2e8f0; color: #4a5568; }
+
+    /* ── Add / edit modal ─────────────────────────────────── */
+    .modal-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.45); z-index: 100;
+      align-items: center; justify-content: center;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: #fff; border-radius: 8px; padding: 1.5rem;
+      width: min(95vw, 580px); max-height: 90vh; overflow-y: auto;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+    }
+    .modal h2 { margin: 0 0 1rem; font-size: 1.15rem; }
+    .form-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem 1rem;
+    }
+    .form-grid .full { grid-column: 1 / -1; }
+    .form-group { display: flex; flex-direction: column; gap: 0.25rem; }
+    .form-group label { font-size: 0.82rem; font-weight: 600; color: #4a5568; }
+    .form-group input, .form-group select, .form-group textarea {
+      padding: 0.38rem 0.6rem; border: 1px solid #cbd5e0;
+      border-radius: 4px; font-size: 0.9rem; font-family: inherit;
+    }
+    .form-group textarea { resize: vertical; min-height: 60px; }
+    .modal-actions { display: flex; gap: 0.5rem; justify-content: flex-end; margin-top: 1rem; }
+
+    /* ── Footer ───────────────────────────────────────────── */
+    footer {
+      margin-top: 3rem; padding: 1rem 0;
+      border-top: 1px solid #e8e8e8;
+      font-size: 0.82rem; color: #718096; text-align: center;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <header class="page-header">
+    <h1>Publications</h1>
+    <p>
+      Auto-fetched from <strong>PubMed</strong> (primary) and <strong>Semantic Scholar</strong> (supplement).
+      You can filter, sort, and manually add, edit, or remove entries below.
+    </p>
+  </header>
+
+  <!-- ── Author search ──────────────────────────────────── -->
+  <div class="controls">
+    <div>
+      <label for="author-input">Author name</label><br>
+      <input type="text" id="author-input" value="Cyril Pernet" placeholder="First Last" />
+    </div>
+    <button class="btn btn-primary" id="fetch-btn" style="align-self:flex-end">Fetch publications</button>
+    <button class="btn btn-secondary" id="add-btn"   style="align-self:flex-end">＋ Add manually</button>
+    <button class="btn btn-secondary" id="export-btn" style="align-self:flex-end">⬇ Export JSON</button>
+    <button class="btn btn-secondary" id="import-btn" style="align-self:flex-end">⬆ Import JSON</button>
+    <input type="file" id="import-file" accept=".json" style="display:none" />
+  </div>
+
+  <!-- ── Sort controls ──────────────────────────────────── -->
+  <div class="controls">
+    <label>Sort by:</label>
+    <select id="sort-col">
+      <option value="year">Year</option>
+      <option value="topic">Topic</option>
+      <option value="firstAuthor">First author</option>
+      <option value="lastAuthor">Last author</option>
+      <option value="title">Title</option>
+    </select>
+    <select id="sort-dir">
+      <option value="desc">Descending</option>
+      <option value="asc">Ascending</option>
+    </select>
+    <button class="btn btn-secondary" id="sort-btn">Apply sort</button>
+  </div>
+
+  <!-- ── Topic filter chips ─────────────────────────────── -->
+  <div class="filter-chips" id="topic-chips">
+    <span class="chip active" data-topic="all">All</span>
+    <!-- chips are populated dynamically from TOPICS config -->
+  </div>
+
+  <!-- ── Status line ────────────────────────────────────── -->
+  <div id="status"></div>
+
+  <!-- ── Stats ──────────────────────────────────────────── -->
+  <div id="stats-bar"></div>
+
+  <!-- ── Table ──────────────────────────────────────────── -->
+  <div class="table-wrap">
+    <table id="pub-table">
+      <thead>
+        <tr>
+          <th class="td-num"   data-col="num"         title="Click to sort">#<span class="sort-icon">↕</span></th>
+          <th class="td-topic" data-col="topic"       title="Click to sort">Topic<span class="sort-icon">↕</span></th>
+          <th class="td-authors" data-col="firstAuthor" title="Click to sort">Authors<span class="sort-icon">↕</span></th>
+          <th class="td-year"  data-col="year"        title="Click to sort">Year<span class="sort-icon">↕</span></th>
+          <th class="td-title" data-col="title"       title="Click to sort">Title<span class="sort-icon">↕</span></th>
+          <th class="td-journal" data-col="journal"   title="Click to sort">Journal<span class="sort-icon">↕</span></th>
+          <th class="td-actions">Actions</th>
+        </tr>
+      </thead>
+      <tbody id="pub-tbody"></tbody>
+    </table>
+  </div>
+
+</div><!-- /container -->
+
+<!-- ── Add / Edit modal ───────────────────────────────── -->
+<div class="modal-overlay" id="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+  <div class="modal">
+    <h2 id="modal-title">Add publication</h2>
+    <div class="form-grid">
+      <div class="form-group full">
+        <label for="m-title">Title *</label>
+        <textarea id="m-title" rows="2"></textarea>
+      </div>
+      <div class="form-group full">
+        <label for="m-authors">Authors (comma-separated, Last FM format)</label>
+        <input type="text" id="m-authors" placeholder="Pernet C, Smith A, …" />
+      </div>
+      <div class="form-group">
+        <label for="m-year">Year *</label>
+        <input type="text" id="m-year" placeholder="2024" />
+      </div>
+      <div class="form-group">
+        <label for="m-journal">Journal</label>
+        <input type="text" id="m-journal" />
+      </div>
+      <div class="form-group">
+        <label for="m-topic">Topic *</label>
+        <select id="m-topic"><!-- populated from TOPICS --></select>
+      </div>
+      <div class="form-group">
+        <label for="m-doi">DOI / URL</label>
+        <input type="text" id="m-doi" placeholder="10.xxxx/…" />
+      </div>
+      <div class="form-group">
+        <label for="m-pmid">PubMed ID</label>
+        <input type="text" id="m-pmid" />
+      </div>
+      <div class="form-group">
+        <label for="m-source">Source</label>
+        <input type="text" id="m-source" value="manual" />
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" id="modal-cancel">Cancel</button>
+      <button class="btn btn-primary"   id="modal-save">Save</button>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="container">
+    Publications fetched live from PubMed E-utilities &amp; Semantic Scholar APIs.
+    Last fetch: <span id="last-fetch">—</span>
+  </div>
+</footer>
+
+<script>
+/* ════════════════════════════════════════════════════════════════
+   ██  USER-EDITABLE CONFIGURATION — safe to change these values  ██
+   ════════════════════════════════════════════════════════════════
+
+   TOPICS
+   ──────
+   Each entry: { id, label, keywords }
+   • id      : used internally and as a CSS class suffix (no spaces).
+   • label   : displayed in the UI.
+   • keywords: array of lowercase strings used to auto-classify a
+               publication by matching against its title/journal.
+               Add / remove words freely.
+               The FIRST topic whose keywords match wins; "other"
+               is the fallback.
+   Order matters — put the most specific topics first.
+
+   AUTHOR_VARIANTS
+   ───────────────
+   All name forms PubMed might return for the target author.
+   Used to detect 1st-author and last-author status.
+
+   PUBMED_RETMAX
+   ─────────────
+   Maximum number of PubMed records to fetch (hard cap: 9999).
+
+*/
+
+const CONFIG = {
+
+  TOPICS: [
+    {
+      id: "method",
+      label: "Method",
+      keywords: [
+        "eeg", "meg", "fmri", "mri", "imaging", "electrode",
+        "artifact", "preprocessing", "pipeline", "toolbox",
+        "software", "algorithm", "open source", "bids"
+      ]
+    },
+    {
+      id: "stats",
+      label: "Stats",
+      keywords: [
+        "statistic", "statistical", "glm", "anova", "regression",
+        "bootstrap", "permutation", "bayesian", "effect size",
+        "false discovery", "correction", "power", "cluster",
+        "robust", "univariate", "multivariate"
+      ]
+    },
+    {
+      id: "clinical",
+      label: "Clinical",
+      keywords: [
+        "patient", "disorder", "disease", "clinical", "schizophrenia",
+        "depression", "bipolar", "epilepsy", "autism", "adhd",
+        "stroke", "dementia", "alzheimer", "therapy", "treatment",
+        "diagnosis"
+      ]
+    },
+    {
+      id: "cog-neuro",
+      label: "Cog Neuro",
+      keywords: [
+        "cognitive", "perception", "attention", "memory", "language",
+        "face", "emotion", "decision", "learning", "working memory",
+        "executive", "motor", "sensory", "cortex", "brain", "neural",
+        "neuroscience", "connectivity"
+      ]
+    }
+    /* ── ADD MORE TOPICS HERE following the same structure ── */
+  ],
+
+  AUTHOR_VARIANTS: [
+    "Pernet C",
+    "Pernet CR",
+    "Pernet Cyril"
+  ],
+
+  PUBMED_RETMAX: 500
+
+}; /* ── END OF USER-EDITABLE CONFIG ── */
+
+/* ════════════════════════════════════════════════════════════════
+   Application code — edit with care
+   ════════════════════════════════════════════════════════════════ */
+
+// ── State ──────────────────────────────────────────────────────
+let publications = [];    // master array
+let filtered     = [];    // currently visible (after topic filter)
+let sortState    = { col: "year", dir: "desc" };
+let activeFilter = "all";
+let editingId    = null;  // null = new entry, string = existing id
+
+// ── Helpers ────────────────────────────────────────────────────
+function uid() {
+  return Math.random().toString(36).slice(2) + Date.now().toString(36);
+}
+
+function setStatus(html) {
+  document.getElementById("status").innerHTML = html;
+}
+
+function classifyTopic(title = "", journal = "") {
+  const haystack = (title + " " + journal).toLowerCase();
+  for (const t of CONFIG.TOPICS) {
+    if (t.keywords.some(kw => haystack.includes(kw))) return t.id;
+  }
+  return "other";
+}
+
+function parseAuthors(authorStr = "") {
+  // handles "A B, C D" or array of objects from APIs
+  if (Array.isArray(authorStr)) {
+    return authorStr.map(a => a.name || a.authname || "").filter(Boolean);
+  }
+  return authorStr.split(/[;,]/).map(s => s.trim()).filter(Boolean);
+}
+
+function isTargetAuthor(name) {
+  const n = name.toLowerCase().replace(/\s+/g, " ");
+  return CONFIG.AUTHOR_VARIANTS.some(v => {
+    const vl = v.toLowerCase().replace(/\s+/g, " ");
+    return n === vl || n.startsWith(vl.split(" ")[0]) && n.includes(vl.split(" ")[1] || "");
+  });
+}
+
+function computeAuthorFlags(authors) {
+  const isFirst = authors.length > 0 && isTargetAuthor(authors[0]);
+  const isLast  = authors.length > 0 && isTargetAuthor(authors[authors.length - 1]);
+  return { isFirst, isLast };
+}
+
+function topicBadge(topicId) {
+  const topic = CONFIG.TOPICS.find(t => t.id === topicId);
+  const label = topic ? topic.label : "Other";
+  const cls   = topic ? `topic-${topicId}` : "topic-other";
+  return `<span class="topic-badge ${cls}">${label}</span>`;
+}
+
+function formatAuthors(authors) {
+  if (!authors || authors.length === 0) return "—";
+  if (authors.length <= 4) return authors.join(", ");
+  return authors.slice(0, 3).join(", ") + " … " + authors[authors.length - 1];
+}
+
+// ── Build topic chips ──────────────────────────────────────────
+function buildChips() {
+  const container = document.getElementById("topic-chips");
+  container.innerHTML = `<span class="chip active" data-topic="all">All</span>`;
+  for (const t of CONFIG.TOPICS) {
+    const chip = document.createElement("span");
+    chip.className = "chip";
+    chip.dataset.topic = t.id;
+    chip.textContent = t.label;
+    container.appendChild(chip);
+  }
+  // "Other" chip
+  const other = document.createElement("span");
+  other.className = "chip";
+  other.dataset.topic = "other";
+  other.textContent = "Other";
+  container.appendChild(other);
+
+  container.addEventListener("click", e => {
+    if (!e.target.classList.contains("chip")) return;
+    container.querySelectorAll(".chip").forEach(c => c.classList.remove("active"));
+    e.target.classList.add("active");
+    activeFilter = e.target.dataset.topic;
+    applyFilterAndRender();
+  });
+}
+
+// ── Populate modal topic select ────────────────────────────────
+function buildTopicSelect() {
+  const sel = document.getElementById("m-topic");
+  sel.innerHTML = "";
+  for (const t of CONFIG.TOPICS) {
+    const opt = document.createElement("option");
+    opt.value = t.id;
+    opt.textContent = t.label;
+    sel.appendChild(opt);
+  }
+  const other = document.createElement("option");
+  other.value = "other";
+  other.textContent = "Other";
+  sel.appendChild(other);
+}
+
+// ── Stats bar ──────────────────────────────────────────────────
+function updateStats() {
+  const bar  = document.getElementById("stats-bar");
+  const total = publications.length;
+  const first = publications.filter(p => p.isFirst).length;
+  const last  = publications.filter(p => p.isLast).length;
+  const topicCounts = {};
+  for (const p of publications) {
+    topicCounts[p.topic] = (topicCounts[p.topic] || 0) + 1;
+  }
+  let html = `<span>Total: <strong>${total}</strong></span>
+    <span>1st author: <strong>${first}</strong></span>
+    <span>Last author: <strong>${last}</strong></span>`;
+  for (const t of CONFIG.TOPICS) {
+    if (topicCounts[t.id]) {
+      html += `<span>${t.label}: <strong>${topicCounts[t.id]}</strong></span>`;
+    }
+  }
+  bar.innerHTML = html;
+}
+
+// ── Render table ───────────────────────────────────────────────
+function applyFilterAndRender() {
+  filtered = activeFilter === "all"
+    ? [...publications]
+    : publications.filter(p => p.topic === activeFilter);
+
+  // apply sort
+  const col = sortState.col;
+  const dir = sortState.dir === "asc" ? 1 : -1;
+  filtered.sort((a, b) => {
+    let va = a[col] || "", vb = b[col] || "";
+    if (col === "year") { va = parseInt(va) || 0; vb = parseInt(vb) || 0; }
+    else { va = String(va).toLowerCase(); vb = String(vb).toLowerCase(); }
+    return va < vb ? -dir : va > vb ? dir : 0;
+  });
+
+  renderTable();
+  updateStats();
+  updateSortHeaders();
+}
+
+function renderTable() {
+  const tbody = document.getElementById("pub-tbody");
+  if (filtered.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:2rem;color:#718096">No publications to display.</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = filtered.map((p, i) => {
+    const firstFlag = p.isFirst ? ' title="First author"' : "";
+    const lastFlag  = p.isLast  ? ' title="Last author"'  : "";
+    const authorsHtml = (() => {
+      if (!p.authors || p.authors.length === 0) return "—";
+      let parts;
+      if (p.authors.length <= 4) {
+        parts = p.authors.map((a, idx) => {
+          const isF = idx === 0 && p.isFirst;
+          const isL = idx === p.authors.length - 1 && p.isLast;
+          const style = (isF || isL) ? " style=\"font-weight:600\"" : "";
+          return `<span${style}>${a}</span>`;
+        });
+        return parts.join(", ");
+      } else {
+        const first3 = p.authors.slice(0, 3).map((a, idx) => {
+          const isF = idx === 0 && p.isFirst;
+          const style = isF ? " style=\"font-weight:600\"" : "";
+          return `<span${style}>${a}</span>`;
+        }).join(", ");
+        const lastA = p.authors[p.authors.length - 1];
+        const isL = p.isLast;
+        const lastStyle = isL ? " style=\"font-weight:600\"" : "";
+        return first3 + ` … <span${lastStyle}>${lastA}</span>`;
+      }
+    })();
+
+    const titleHtml = p.doi
+      ? `<a href="${p.doi.startsWith("http") ? p.doi : "https://doi.org/" + p.doi}" target="_blank" rel="noopener">${escHtml(p.title)}</a>`
+      : escHtml(p.title);
+
+    return `<tr data-id="${p.id}">
+      <td class="td-num">${i + 1}</td>
+      <td class="td-topic">${topicBadge(p.topic)}</td>
+      <td class="td-authors">${authorsHtml}</td>
+      <td class="td-year">${p.year || "—"}</td>
+      <td class="td-title">${titleHtml}</td>
+      <td class="td-journal">${escHtml(p.journal || "—")}</td>
+      <td class="td-actions">
+        <button class="btn btn-edit" onclick="openEdit('${p.id}')" title="Edit">✏</button>
+        <button class="btn btn-danger" onclick="removeEntry('${p.id}')" title="Remove">✕</button>
+      </td>
+    </tr>`;
+  }).join("");
+}
+
+function escHtml(str) {
+  return String(str)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
+// ── Sort header highlighting ───────────────────────────────────
+function updateSortHeaders() {
+  document.querySelectorAll("thead th[data-col]").forEach(th => {
+    const col = th.dataset.col;
+    th.classList.toggle("sorted", col === sortState.col);
+    const icon = th.querySelector(".sort-icon");
+    if (icon) {
+      icon.textContent = col === sortState.col
+        ? (sortState.dir === "asc" ? "↑" : "↓")
+        : "↕";
+    }
+  });
+}
+
+// click-to-sort on headers
+document.querySelectorAll("thead th[data-col]").forEach(th => {
+  th.addEventListener("click", () => {
+    const col = th.dataset.col;
+    if (col === "num") return;
+    if (sortState.col === col) {
+      sortState.dir = sortState.dir === "asc" ? "desc" : "asc";
+    } else {
+      sortState.col = col;
+      sortState.dir = "asc";
+    }
+    applyFilterAndRender();
+  });
+});
+
+// sort dropdown
+document.getElementById("sort-btn").addEventListener("click", () => {
+  sortState.col = document.getElementById("sort-col").value;
+  sortState.dir = document.getElementById("sort-dir").value;
+  applyFilterAndRender();
+});
+
+// ── Remove / Edit ──────────────────────────────────────────────
+function removeEntry(id) {
+  if (!confirm("Remove this publication?")) return;
+  publications = publications.filter(p => p.id !== id);
+  applyFilterAndRender();
+}
+
+function openEdit(id) {
+  const p = publications.find(x => x.id === id);
+  if (!p) return;
+  editingId = id;
+  document.getElementById("modal-title").textContent = "Edit publication";
+  document.getElementById("m-title").value   = p.title   || "";
+  document.getElementById("m-authors").value = (p.authors || []).join(", ");
+  document.getElementById("m-year").value    = p.year    || "";
+  document.getElementById("m-journal").value = p.journal || "";
+  document.getElementById("m-topic").value   = p.topic   || "other";
+  document.getElementById("m-doi").value     = p.doi     || "";
+  document.getElementById("m-pmid").value    = p.pmid    || "";
+  document.getElementById("m-source").value  = p.source  || "manual";
+  openModal();
+}
+
+// ── Modal ──────────────────────────────────────────────────────
+function openModal() {
+  document.getElementById("modal-overlay").classList.add("open");
+}
+function closeModal() {
+  document.getElementById("modal-overlay").classList.remove("open");
+  editingId = null;
+}
+
+document.getElementById("add-btn").addEventListener("click", () => {
+  editingId = null;
+  document.getElementById("modal-title").textContent = "Add publication";
+  ["m-title","m-authors","m-year","m-journal","m-doi","m-pmid"].forEach(id =>
+    document.getElementById(id).value = "");
+  document.getElementById("m-topic").value  = CONFIG.TOPICS[0]?.id || "other";
+  document.getElementById("m-source").value = "manual";
+  openModal();
+});
+
+document.getElementById("modal-cancel").addEventListener("click", closeModal);
+document.getElementById("modal-overlay").addEventListener("click", e => {
+  if (e.target === e.currentTarget) closeModal();
+});
+
+document.getElementById("modal-save").addEventListener("click", () => {
+  const title = document.getElementById("m-title").value.trim();
+  if (!title) { alert("Title is required."); return; }
+  const authors = parseAuthors(document.getElementById("m-authors").value);
+  const { isFirst, isLast } = computeAuthorFlags(authors);
+  const entry = {
+    id:          editingId || uid(),
+    title,
+    authors,
+    firstAuthor: authors[0]  || "",
+    lastAuthor:  authors[authors.length - 1] || "",
+    year:        document.getElementById("m-year").value.trim(),
+    journal:     document.getElementById("m-journal").value.trim(),
+    topic:       document.getElementById("m-topic").value,
+    doi:         document.getElementById("m-doi").value.trim(),
+    pmid:        document.getElementById("m-pmid").value.trim(),
+    source:      document.getElementById("m-source").value.trim(),
+    isFirst, isLast
+  };
+
+  if (editingId) {
+    const idx = publications.findIndex(p => p.id === editingId);
+    if (idx !== -1) publications[idx] = entry;
+  } else {
+    publications.push(entry);
+  }
+  closeModal();
+  applyFilterAndRender();
+});
+
+// ── Export / Import ────────────────────────────────────────────
+document.getElementById("export-btn").addEventListener("click", () => {
+  const blob = new Blob([JSON.stringify(publications, null, 2)], { type: "application/json" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "publications.json";
+  a.click();
+});
+
+document.getElementById("import-btn").addEventListener("click", () => {
+  document.getElementById("import-file").click();
+});
+document.getElementById("import-file").addEventListener("change", e => {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    try {
+      const data = JSON.parse(ev.target.result);
+      if (!Array.isArray(data)) throw new Error("Expected an array");
+      publications = data;
+      applyFilterAndRender();
+      setStatus(`Imported ${data.length} publications.`);
+    } catch(err) {
+      alert("Could not parse JSON: " + err.message);
+    }
+  };
+  reader.readAsText(file);
+  e.target.value = "";
+});
+
+// ── PubMed fetch ───────────────────────────────────────────────
+async function fetchPubMed(authorName) {
+  const base  = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/";
+  const query = encodeURIComponent(`${authorName}[Author]`);
+  const search = await fetch(
+    `${base}esearch.fcgi?db=pubmed&term=${query}&retmax=${CONFIG.PUBMED_RETMAX}&retmode=json`
+  );
+  if (!search.ok) throw new Error("PubMed search failed");
+  const searchJson = await search.json();
+  const ids = searchJson.esearchresult?.idlist || [];
+  if (ids.length === 0) return [];
+
+  setStatus(`<span class="spinner"></span>PubMed: fetching details for ${ids.length} records…`);
+
+  // fetch in batches of 200
+  const results = [];
+  const batchSize = 200;
+  for (let i = 0; i < ids.length; i += batchSize) {
+    const batch = ids.slice(i, i + batchSize).join(",");
+    const detail = await fetch(
+      `${base}efetch.fcgi?db=pubmed&id=${batch}&retmode=xml`
+    );
+    if (!detail.ok) continue;
+    const xml  = await detail.text();
+    const parser = new DOMParser();
+    const doc  = parser.parseFromString(xml, "text/xml");
+    const arts = doc.querySelectorAll("PubmedArticle");
+
+    arts.forEach(art => {
+      const pmid    = art.querySelector("PMID")?.textContent || "";
+      const title   = art.querySelector("ArticleTitle")?.textContent || "";
+      const journal = art.querySelector("ISOAbbreviation,Title")?.textContent || "";
+      const yearEl  = art.querySelector("PubDate Year, PubDate MedlineDate");
+      const year    = yearEl ? yearEl.textContent.slice(0, 4) : "";
+      const doiEl   = art.querySelector("ArticleId[IdType='doi']");
+      const doi     = doiEl ? doiEl.textContent : "";
+
+      const authorNodes = art.querySelectorAll("Author");
+      const authors = Array.from(authorNodes).map(a => {
+        const ln = a.querySelector("LastName")?.textContent || "";
+        const in_ = a.querySelector("Initials")?.textContent || "";
+        return ln && in_ ? `${ln} ${in_}` : (ln || a.querySelector("CollectiveName")?.textContent || "");
+      }).filter(Boolean);
+
+      const { isFirst, isLast } = computeAuthorFlags(authors);
+      results.push({
+        id: "pm_" + pmid,
+        pmid, title, journal, year, doi,
+        authors,
+        firstAuthor: authors[0] || "",
+        lastAuthor:  authors[authors.length - 1] || "",
+        topic:  classifyTopic(title, journal),
+        source: "pubmed",
+        isFirst, isLast
+      });
+    });
+  }
+  return results;
+}
+
+// ── Semantic Scholar fetch ─────────────────────────────────────
+async function fetchSemanticScholar(authorName) {
+  // Search for the author first
+  const authorSearch = await fetch(
+    `https://api.semanticscholar.org/graph/v1/author/search?query=${encodeURIComponent(authorName)}&limit=5&fields=name,paperCount`
+  );
+  if (!authorSearch.ok) return [];
+  const authorData = await authorSearch.json();
+  const author = authorData.data?.[0];
+  if (!author) return [];
+
+  const papersRes = await fetch(
+    `https://api.semanticscholar.org/graph/v1/author/${author.authorId}/papers?limit=500&fields=title,year,journal,authors,externalIds`
+  );
+  if (!papersRes.ok) return [];
+  const papersData = await papersRes.json();
+
+  return (papersData.data || []).map(p => {
+    const authors = (p.authors || []).map(a => a.name || "");
+    const { isFirst, isLast } = computeAuthorFlags(authors);
+    const doi = p.externalIds?.DOI || "";
+    const journal = p.journal?.name || "";
+    return {
+      id: "ss_" + (p.paperId || uid()),
+      pmid:   p.externalIds?.PubMed || "",
+      title:  p.title || "",
+      journal, year: String(p.year || ""),
+      doi, authors,
+      firstAuthor: authors[0] || "",
+      lastAuthor:  authors[authors.length - 1] || "",
+      topic:  classifyTopic(p.title, journal),
+      source: "semanticscholar",
+      isFirst, isLast
+    };
+  });
+}
+
+// ── Merge & deduplicate ────────────────────────────────────────
+function mergePublications(pubmed, scholar) {
+  const seen = new Set();
+  const all  = [];
+
+  const normalize = t => t.toLowerCase().replace(/[^a-z0-9]/g, "").slice(0, 60);
+
+  for (const p of pubmed) {
+    seen.add(normalize(p.title));
+    all.push(p);
+  }
+  for (const p of scholar) {
+    const key = normalize(p.title);
+    if (!seen.has(key)) {
+      seen.add(key);
+      all.push(p);
+    }
+  }
+  return all;
+}
+
+// ── Main fetch handler ─────────────────────────────────────────
+document.getElementById("fetch-btn").addEventListener("click", async () => {
+  const name = document.getElementById("author-input").value.trim();
+  if (!name) { alert("Please enter an author name."); return; }
+
+  setStatus(`<span class="spinner"></span>Querying PubMed for "${name}"…`);
+  publications = [];
+  filtered     = [];
+  renderTable();
+
+  let pubmed = [], scholar = [];
+
+  try {
+    pubmed = await fetchPubMed(name);
+    setStatus(`<span class="spinner"></span>PubMed: ${pubmed.length} records. Querying Semantic Scholar…`);
+  } catch (e) {
+    setStatus(`⚠ PubMed error: ${e.message}. Trying Semantic Scholar…`);
+  }
+
+  try {
+    scholar = await fetchSemanticScholar(name);
+  } catch (e) {
+    // non-fatal
+  }
+
+  publications = mergePublications(pubmed, scholar);
+  document.getElementById("last-fetch").textContent = new Date().toLocaleString();
+  setStatus(`Loaded ${publications.length} publications (${pubmed.length} PubMed + ${scholar.length - (publications.length - pubmed.length)} Semantic Scholar unique additions).`);
+  applyFilterAndRender();
+});
+
+// ── Init ───────────────────────────────────────────────────────
+buildChips();
+buildTopicSelect();
+applyFilterAndRender();
+</script>
+</body>
+</html>

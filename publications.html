@@ -147,6 +147,38 @@
     .topic-cog-neuro { background: #fefcbf; color: #744210; }
     .topic-other     { background: #e2e8f0; color: #4a5568; }
 
+    /* ── Export dropdown ─────────────────────────────────── */
+    .export-wrap { position: relative; align-self: flex-end; }
+    .export-menu {
+      display: none; position: absolute; top: calc(100% + 4px); left: 0;
+      background: #fff; border: 1px solid #e2e8f0; border-radius: 6px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.12); z-index: 50;
+      min-width: 170px; overflow: hidden;
+    }
+    .export-menu.open { display: block; }
+    .export-menu button {
+      display: block; width: 100%; text-align: left;
+      padding: 0.5rem 1rem; border: none; background: none;
+      font-size: 0.88rem; cursor: pointer; color: #2d3748;
+    }
+    .export-menu button:hover { background: #ebf4ff; }
+    .export-menu hr { margin: 0.25rem 0; border: none; border-top: 1px solid #e2e8f0; }
+
+    /* ── Print / PDF styles ──────────────────────────────── */
+    @media print {
+      .controls, .filter-chips, #status, #stats-bar,
+      .td-actions, header.page-header p, footer { display: none !important; }
+      body { font-size: 10pt; color: #000; }
+      h1 { font-size: 16pt; margin-bottom: 0.5rem; }
+      table { font-size: 9pt; border-collapse: collapse; width: 100%; }
+      thead th { background: #f0f0f0 !important; border-bottom: 1.5pt solid #000; }
+      tbody tr { border-bottom: 0.5pt solid #ccc; }
+      tbody td { padding: 3pt 5pt; }
+      .topic-badge { border: 0.5pt solid #888; background: none !important;
+        color: #000 !important; padding: 0 3pt; }
+      a { color: #000; text-decoration: none; }
+    }
+
     /* ── Add / edit modal ─────────────────────────────────── */
     .modal-overlay {
       display: none; position: fixed; inset: 0;
@@ -200,8 +232,20 @@
     </div>
     <button class="btn btn-primary" id="fetch-btn" style="align-self:flex-end">Fetch publications</button>
     <button class="btn btn-secondary" id="add-btn"   style="align-self:flex-end">＋ Add manually</button>
-    <button class="btn btn-secondary" id="export-btn" style="align-self:flex-end">⬇ Export JSON</button>
-    <button class="btn btn-secondary" id="import-btn" style="align-self:flex-end">⬆ Import JSON</button>
+    <div class="export-wrap">
+      <button class="btn btn-secondary" id="export-toggle" style="align-self:flex-end">&#x2B07; Export &#x25BE;</button>
+      <div class="export-menu" id="export-menu">
+        <button data-fmt="apa">APA (.txt)</button>
+        <button data-fmt="bibtex">BibTeX (.bib)</button>
+        <button data-fmt="ris">RIS (.ris)</button>
+        <hr>
+        <button data-fmt="csv">CSV (.csv)</button>
+        <button data-fmt="json">JSON (.json)</button>
+        <hr>
+        <button data-fmt="pdf">Print / Save as PDF</button>
+      </div>
+    </div>
+    <button class="btn btn-secondary" id="import-btn" style="align-self:flex-end">&#x2B06; Import JSON</button>
     <input type="file" id="import-file" accept=".json" style="display:none" />
   </div>
 
@@ -817,12 +861,95 @@ document.getElementById("modal-save").addEventListener("click", () => {
 });
 
 // ── Export / Import ────────────────────────────────────────────
-document.getElementById("export-btn").addEventListener("click", () => {
-  const blob = new Blob([JSON.stringify(publications, null, 2)], { type: "application/json" });
+
+// APA
+function formatAPA(p) {
+  const authors = (p.authors || []).join(", ");
+  const year    = p.year ? `(${p.year})` : "(n.d.)";
+  const doi     = p.doi
+    ? "https://doi.org/" + p.doi.replace(/^https?:\/\/doi\.org\//, "")
+    : "";
+  return [authors, year, (p.title || "Untitled") + ".", p.journal || "", doi]
+    .filter(Boolean).join(" ");
+}
+
+// BibTeX
+function formatBibTeX(p, idx) {
+  const key    = (p.authors?.[0] || "Unknown").replace(/\s+/g, "") + (p.year || "0000") + idx;
+  const author = (p.authors || []).join(" and ");
+  const doiLine = p.doi ? `\n  doi       = {${p.doi}},` : "";
+  return `@article{${key},\n  author    = {${author}},\n  title     = {${p.title || ""}},\n  journal   = {${p.journal || ""}},\n  year      = {${p.year || ""}},${doiLine}\n}`;
+}
+
+// RIS
+function formatRIS(p) {
+  const lines = ["TY  - JOUR"];
+  (p.authors || []).forEach(a => lines.push(`AU  - ${a}`));
+  if (p.year)    lines.push(`PY  - ${p.year}`);
+  if (p.title)   lines.push(`TI  - ${p.title}`);
+  if (p.journal) lines.push(`JO  - ${p.journal}`);
+  if (p.doi)     lines.push(`DO  - ${p.doi}`);
+  if (p.pmid)    lines.push(`AN  - ${p.pmid}`);
+  lines.push("ER  - ");
+  return lines.join("\n");
+}
+
+// Download helper
+function triggerDownload(content, filename, mime) {
+  const blob = new Blob([content], { type: mime });
   const a = document.createElement("a");
   a.href = URL.createObjectURL(blob);
-  a.download = "publications.json";
+  a.download = filename;
   a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 10000);
+}
+
+// Export menu toggle
+const exportToggle = document.getElementById("export-toggle");
+const exportMenu   = document.getElementById("export-menu");
+exportToggle.addEventListener("click", e => {
+  e.stopPropagation();
+  exportMenu.classList.toggle("open");
+});
+document.addEventListener("click", () => exportMenu.classList.remove("open"));
+
+exportMenu.addEventListener("click", e => {
+  const btn = e.target.closest("button[data-fmt]");
+  if (!btn) return;
+  exportMenu.classList.remove("open");
+  const fmt  = btn.dataset.fmt;
+  // export what is currently visible (filtered), fall back to all
+  const list = filtered.length ? filtered : publications;
+
+  if (fmt === "json") {
+    triggerDownload(JSON.stringify(list, null, 2), "publications.json", "application/json");
+
+  } else if (fmt === "apa") {
+    const text = list.map((p, i) => `${i + 1}. ${formatAPA(p)}`).join("\n\n");
+    triggerDownload(text, "publications_apa.txt", "text/plain");
+
+  } else if (fmt === "bibtex") {
+    const text = list.map((p, i) => formatBibTeX(p, i + 1)).join("\n\n");
+    triggerDownload(text, "publications.bib", "text/plain");
+
+  } else if (fmt === "ris") {
+    const text = list.map(formatRIS).join("\n\n");
+    triggerDownload(text, "publications.ris", "text/plain");
+
+  } else if (fmt === "csv") {
+    const cols = ["#","Year","Authors","Title","Journal","Topic","DOI","PMID","First author","Last author"];
+    const esc  = v => `"${String(v || "").replace(/"/g, '""')}"`;
+    const rows = list.map((p, i) => [
+      i + 1, p.year,
+      (p.authors || []).join("; "),
+      p.title, p.journal, p.topic, p.doi, p.pmid,
+      p.isFirst ? 1 : 0, p.isLast ? 1 : 0
+    ].map(esc).join(","));
+    triggerDownload([cols.map(esc).join(","), ...rows].join("\n"), "publications.csv", "text/csv");
+
+  } else if (fmt === "pdf") {
+    window.print(); // browser print dialog → "Save as PDF"
+  }
 });
 
 document.getElementById("import-btn").addEventListener("click", () => {

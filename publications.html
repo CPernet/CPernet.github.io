@@ -394,11 +394,60 @@ const CONFIG = {
    ════════════════════════════════════════════════════════════════ */
 
 // ── State ──────────────────────────────────────────────────────
-let publications = [];    // master array
-let filtered     = [];    // currently visible (after topic filter)
-let sortState    = { col: "year", dir: "desc" };
-let activeFilter = "all";
-let editingId    = null;  // null = new entry, string = existing id
+let publications  = [];    // master array
+let filtered      = [];    // currently visible (after topic filter)
+let sortState     = { col: "year", dir: "desc" };
+let activeFilter  = "all";
+let editingId     = null;  // null = new entry, string = existing id
+let tombstones    = new Set(); // normalised titles the user deleted
+let cachedAuthor  = "";        // author name currently in cache
+
+// ── localStorage helpers ─────────────────────────────────────────
+function storageKey(name) {
+  return "pubs_v1_" + name.toLowerCase().replace(/\s+/g, "_");
+}
+function tombstoneKey(name) {
+  return "pubs_tombs_v1_" + name.toLowerCase().replace(/\s+/g, "_");
+}
+function normTitle(t) {
+  return String(t).toLowerCase().replace(/[^a-z0-9]/g, "").slice(0, 60);
+}
+
+/** Persist current list + tombstones to localStorage for `name`. */
+function saveToCache(name) {
+  if (!name) return;
+  try {
+    localStorage.setItem(storageKey(name), JSON.stringify(publications));
+    localStorage.setItem(tombstoneKey(name), JSON.stringify([...tombstones]));
+    localStorage.setItem(storageKey(name) + "_fetchdate",
+      document.getElementById("last-fetch").textContent);
+  } catch(e) { /* storage full – silently skip */ }
+}
+
+/** Load list + tombstones from localStorage for `name`. Returns true if found. */
+function loadFromCache(name) {
+  if (!name) return false;
+  try {
+    const raw = localStorage.getItem(storageKey(name));
+    if (!raw) return false;
+    publications = JSON.parse(raw);
+    const tombs = localStorage.getItem(tombstoneKey(name));
+    tombstones = new Set(tombs ? JSON.parse(tombs) : []);
+    cachedAuthor = name;
+    const fd = localStorage.getItem(storageKey(name) + "_fetchdate");
+    if (fd) document.getElementById("last-fetch").textContent = fd;
+    return true;
+  } catch(e) { return false; }
+}
+
+/**
+ * Commit all mutations: save to cache then re-render.
+ * Call this instead of bare applyFilterAndRender() after any change.
+ */
+function commitAndRender() {
+  saveToCache(cachedAuthor || document.getElementById("author-input").value.trim());
+  applyFilterAndRender();
+}
 
 // ── Helpers ────────────────────────────────────────────────────
 function uid() {
@@ -628,6 +677,8 @@ document.getElementById("pub-tbody").addEventListener("click", e => {
     newBadge.outerHTML; // placeholder
     const td = sel.parentElement;
     if (td) td.innerHTML = topicBadge(pubId, newTopic);
+    // persist the topic change without a full re-render
+    saveToCache(cachedAuthor || document.getElementById("author-input").value.trim());
     updateStats();
   }
 
@@ -688,9 +739,11 @@ document.getElementById("sort-btn").addEventListener("click", () => {
 
 // ── Remove / Edit ──────────────────────────────────────────────
 function removeEntry(id) {
-  if (!confirm("Remove this publication?")) return;
+  if (!confirm("Remove this publication?\n\nThis entry will not come back on re-fetch.")) return;
+  const pub = publications.find(p => p.id === id);
+  if (pub) tombstones.add(normTitle(pub.title)); // remember so re-fetch skips it
   publications = publications.filter(p => p.id !== id);
-  applyFilterAndRender();
+  commitAndRender();
 }
 
 function openEdit(id) {
@@ -760,7 +813,7 @@ document.getElementById("modal-save").addEventListener("click", () => {
     publications.push(entry);
   }
   closeModal();
-  applyFilterAndRender();
+  commitAndRender();
 });
 
 // ── Export / Import ────────────────────────────────────────────
@@ -784,7 +837,7 @@ document.getElementById("import-file").addEventListener("change", e => {
       const data = JSON.parse(ev.target.result);
       if (!Array.isArray(data)) throw new Error("Expected an array");
       publications = data;
-      applyFilterAndRender();
+      commitAndRender();
       setStatus(`Imported ${data.length} publications.`);
     } catch(err) {
       alert("Could not parse JSON: " + err.message);
@@ -892,24 +945,44 @@ async function fetchSemanticScholar(authorName) {
 }
 
 // ── Merge & deduplicate ────────────────────────────────────────
-function mergePublications(pubmed, scholar) {
-  const seen = new Set();
-  const all  = [];
-
-  const normalize = t => t.toLowerCase().replace(/[^a-z0-9]/g, "").slice(0, 60);
-
-  for (const p of pubmed) {
-    seen.add(normalize(p.title));
-    all.push(p);
+/**
+ * Merge freshly-fetched records with the existing cached list.
+ * Rules:
+ *  - Tombstoned titles are never re-added.
+ *  - If a fresh record matches an existing one (by PMID or normalised title),
+ *    the existing entry wins — preserving manual topic edits, author fixes, etc.
+ *    Only missing fields (e.g. DOI) are back-filled.
+ *  - Genuinely new records are appended.
+ *  - Manual additions (source === 'manual') are always kept.
+ */
+function mergeWithExisting(freshList) {
+  const byPmid  = new Map();
+  const byTitle = new Map();
+  for (const p of publications) {
+    if (p.pmid)  byPmid.set(p.pmid, p);
+    byTitle.set(normTitle(p.title), p);
   }
-  for (const p of scholar) {
-    const key = normalize(p.title);
-    if (!seen.has(key)) {
-      seen.add(key);
-      all.push(p);
+
+  let added = 0;
+  for (const p of freshList) {
+    const key = normTitle(p.title);
+    if (tombstones.has(key)) continue;      // user removed this — skip forever
+
+    const existing = (p.pmid && byPmid.get(p.pmid)) || byTitle.get(key);
+    if (existing) {
+      // Back-fill only fields the existing record is missing
+      if (!existing.doi     && p.doi)     existing.doi     = p.doi;
+      if (!existing.pmid    && p.pmid)    existing.pmid    = p.pmid;
+      if (!existing.journal && p.journal) existing.journal = p.journal;
+      // Never overwrite: topic (may be manually set), authors, title, year
+    } else {
+      publications.push(p);
+      byPmid.set(p.pmid, p);
+      byTitle.set(key, p);
+      added++;
     }
   }
-  return all;
+  return added;
 }
 
 // ── Main fetch handler ─────────────────────────────────────────
@@ -917,9 +990,21 @@ document.getElementById("fetch-btn").addEventListener("click", async () => {
   const name = document.getElementById("author-input").value.trim();
   if (!name) { alert("Please enter an author name."); return; }
 
+  // If switching to a different author, save current list first, then load
+  // (or start fresh) for the new name.
+  if (cachedAuthor && cachedAuthor !== name) {
+    saveToCache(cachedAuthor);
+  }
+  cachedAuthor = name;
+
+  // Load cached list for this author (preserves edits across fetches)
+  if (!loadFromCache(name)) {
+    publications = [];
+    tombstones   = new Set();
+  }
+
   setStatus(`<span class="spinner"></span>Querying PubMed for "${name}"…`);
-  publications = [];
-  filtered     = [];
+  filtered = [];
   renderTable();
 
   let pubmed = [], scholar = [];
@@ -934,18 +1019,37 @@ document.getElementById("fetch-btn").addEventListener("click", async () => {
   try {
     scholar = await fetchSemanticScholar(name);
   } catch (e) {
-    // non-fatal
+    // non-fatal — PubMed results are still shown
   }
 
-  publications = mergePublications(pubmed, scholar);
-  document.getElementById("last-fetch").textContent = new Date().toLocaleString();
-  setStatus(`Loaded ${publications.length} publications (${pubmed.length} PubMed + ${scholar.length - (publications.length - pubmed.length)} Semantic Scholar unique additions).`);
-  applyFilterAndRender();
+  // Combine fresh results, deduplicate between PubMed and Scholar first
+  const freshSeen = new Set();
+  const fresh = [];
+  for (const p of [...pubmed, ...scholar]) {
+    const k = normTitle(p.title);
+    if (!freshSeen.has(k)) { freshSeen.add(k); fresh.push(p); }
+  }
+
+  const added = mergeWithExisting(fresh);
+  const fetchDate = new Date().toLocaleString();
+  document.getElementById("last-fetch").textContent = fetchDate;
+  setStatus(
+    `Updated: ${publications.length} total publications ` +
+    `(${added} new since last fetch; your edits and removals preserved).`
+  );
+  commitAndRender();
 });
 
 // ── Init ───────────────────────────────────────────────────────
 buildChips();
 buildTopicSelect();
+
+// Restore cached list for the default author on page load
+const _defaultAuthor = document.getElementById("author-input").value.trim();
+if (loadFromCache(_defaultAuthor)) {
+  cachedAuthor = _defaultAuthor;
+  setStatus(`Restored ${publications.length} publications from cache. Click "Fetch publications" to check for new ones.`);
+}
 applyFilterAndRender();
 </script>
 </body>

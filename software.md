@@ -21,7 +21,7 @@ All code is freely available -- use it, cite it, contribute to it.
 MATLAB toolbox running on top of EEGLAB and FieldTrip for mass-univariate statistical modelling of M/EEG data. Supports hierarchical GLMs, robust estimation, bootstrapping, and multiple comparisons correction across the full sensor space and time domain.
 
 **Tags:** MATLAB, EEGLAB, FieldTrip, Statistics, M/EEG  
-**Links:** [GitHub](https://github.com/LIMO-EEG-Toolbox/limo_meeg) . [Documentation](https://limo-eeg-toolbox.github.io/limo_meeg/)
+**Links:** [GitHub](https://github.com/LIMO-EEG-Toolbox/limo_meeg) . [Documentation](https://limo-eeg-toolbox.github.io/limo_meeg/) . [EEGLAB](https://eeglab.org/)
 
 ---
 
@@ -80,7 +80,7 @@ International collaboration to standardise PET neuroimaging data using BIDS, dev
 European platform for sharing and accessing brain imaging data, developed within an EU consortium. Provides curated datasets, federated access, and infrastructure for large-scale collaborative neuroimaging research.
 
 **Tags:** Data sharing, BIDS, EU, Platform  
-**Links:** [Website](https://public-neuro.github.io/)
+**Links:** [Website](https://publicneuro.eu/) . [GitHub](https://public-neuro.github.io/)
 
 ---
 

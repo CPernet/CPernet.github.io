@@ -1,168 +1,48 @@
----
-layout: default
-title: Home
+﻿---
+layout: page
+title: Dr Cyril Pernet
 description: >-
-  Dr Cyril Pernet — Senior Research Software Developer at the Neurobiology
-  Research Unit, Copenhagen. Brain imaging methods, open science, reproducibility.
+  Dr Cyril Pernet - Associate Professor, Neurobiology
+  Research Unit, Rigshospitalet & Department of Health Teachnology, DTU. Brain imaging methods, open science, reproducibility.
+---
+Associate Professor, Neurobiology Research Unit, Rigshospitalet & Department of Health Teachnology, DTU
+
+I work at the intersection of neuroscience, statistics, and software engineering. My focus is on open methods and tools for brain imaging: developing reproducible analysis pipelines, contributing to community standards such as [BIDS](https://bids.neuroimaging.io), and making rigorous methods accessible to
+the wider imaging community ([LIMO EEG](https://github.com/LIMO-EEG-Toolbox/limo_meeg) for [EEGLAB](https://sccn.ucsd.edu/eeglab/), [OpenNeuroPET ecosystem](https://openneuropet.github.io/), [PublicnEUro.eu](https://publicneuro.eu/)).
+
+All software and teaching materials I produce are freely available.
+
+[GitHub](https://github.com/CPernet) .
+[ORCID](https://orcid.org/0000-0003-4010-4632) .
+[Google Scholar](https://scholar.google.com/citations?user=yz6s_e8AAAAJ&hl=en) .
+[Contact](/contact/)
+
 ---
 
-<div class="container">
+## Site Sections
 
-  <!-- ── HERO ──────────────────────────────────────────────── -->
-  <section class="home-hero">
-    <h1>Dr&nbsp;Cyril&nbsp;Pernet</h1>
-    <p class="home-descriptor">
-      Senior Research Software Developer
-      <span class="home-descriptor-sep">&middot;</span>
-      Neurobiology Research Unit, Copenhagen
-    </p>
-  </section>
+- [**Research**](/research/) -- Brain imaging, statistics, signal processing, and open-science standards. MRI, M/EEG, and robust statistical methods.
+- [**Software**](/software/) -- MATLAB, Python, and R toolboxes for neuroimaging analysis, data management, and statistical computing.
+- [**Teaching & Resources**](/teaching/) -- Lecture slides, tutorials, and workshop materials on neuroimaging and statistics -- freely available to use and re-use.
 
-  <!-- ── INTRO ─────────────────────────────────────────────── -->
-  <section class="home-intro">
-    <p>
-      I work at the intersection of neuroscience, statistics, and software
-      engineering. My focus is on open methods and tools for brain imaging:
-      developing reproducible analysis pipelines, contributing to community
-      standards such as <a href="https://bids.neuroimaging.io" target="_blank" rel="noopener">BIDS</a>,
-      and making rigorous methods accessible to the wider imaging community.
-    </p>
-    <p>
-      All software and teaching materials I produce are freely available.
-    </p>
-    <div class="home-intro-links">
-      <a href="https://github.com/CPernet" target="_blank" rel="noopener">GitHub</a>
-      <a href="https://orcid.org/0000-0001-7524-8315" target="_blank" rel="noopener">ORCID</a>
-      <a href="https://scholar.google.co.uk/citations?user=GaFui7UAAAAJ" target="_blank" rel="noopener">Google Scholar</a>
-      <a href="/contact/">Contact</a>
-    </div>
-  </section>
+---
 
-  <!-- ── NAVIGATION CARDS ──────────────────────────────────── -->
-  <nav class="home-cards" aria-label="Site sections">
+## Selected Highlights
 
-    <a class="home-card" href="/research/">
-      <span class="home-card-eyebrow">Methods &amp; Publications</span>
-      <span class="home-card-title">Research</span>
-      <span class="home-card-desc">
-        Brain imaging, statistics, signal processing, and open-science
-        standards. MRI, M/EEG, and robust statistical methods.
-      </span>
-      <span class="home-card-arrow" aria-hidden="true">&rarr;</span>
-    </a>
+- **2021** -- Senior Research Software Developer at the [Neurobiology Research Unit](https://www.nru.dk), Rigshospitalet, Copenhagen.
+- **2020** -- Co-chaired the [OHBM COBIDAS MEEG](https://cobidasmeeg.wordpress.com/) committee. Guidelines published in [*Nature Neuroscience*](https://www.nature.com/articles/s41593-020-00709-0).
+- **2020** -- Genetics metadata extension for BIDS published in [*GigaScience*](https://academic.oup.com/gigascience/article/9/10/giaa104/5928221).
+- **2020** -- OHBM On-Demand How-To tutorial: [Reproducibility and Good Neuroimaging Practices](https://www.ohbmbrainmappingblog.com/blog/ohbm-on-demand-how-to-reproducibility-and-good-neuroimaging-practices).
+- **2019** -- Comparison of FreeSurfer (DK/DKT) and BrainSuite parcellation variability published in [*BMC Bioinformatics*](https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-019-2609-8).
 
-    <a class="home-card" href="/software/">
-      <span class="home-card-eyebrow">Open Source</span>
-      <span class="home-card-title">Software</span>
-      <span class="home-card-desc">
-        MATLAB, Python, and R toolboxes for neuroimaging analysis,
-        data management, and statistical computing.
-      </span>
-      <span class="home-card-arrow" aria-hidden="true">&rarr;</span>
-    </a>
+[Full publication list](/research/)
 
-    <a class="home-card" href="/teaching/">
-      <span class="home-card-eyebrow">Courses &amp; Materials</span>
-      <span class="home-card-title">Teaching &amp; Resources</span>
-      <span class="home-card-desc">
-        Lecture slides, tutorials, and workshop materials on neuroimaging
-        and statistics — freely available to use and re-use.
-      </span>
-      <span class="home-card-arrow" aria-hidden="true">&rarr;</span>
-    </a>
+---
 
-  </nav>
+## Contact
 
-  <!-- ── HIGHLIGHTS ────────────────────────────────────────── -->
-  <section class="home-highlights" aria-labelledby="highlights-heading">
-    <h2 id="highlights-heading">Selected Highlights</h2>
+**Email:** [cyril.pernet@nru.dk](mailto:cyril.pernet@nru.dk)
 
-    <ol class="home-hl-list" reversed>
+**Address:** Neurobiology Research Unit, Copenhagen University Hospital Rigshospitalet, Copenhagen, Denmark
 
-      <li class="home-hl-item">
-        <span class="home-hl-year">2021</span>
-        <div class="home-hl-body">
-          <p class="home-hl-text">
-            Senior Research Software Developer at the
-            <a href="https://www.nru.dk" target="_blank" rel="noopener">Neurobiology Research Unit</a>,
-            Rigshospitalet, Copenhagen.
-          </p>
-        </div>
-      </li>
-
-      <li class="home-hl-item">
-        <span class="home-hl-year">2020</span>
-        <div class="home-hl-body">
-          <p class="home-hl-text">
-            Co-chaired the <a href="https://cobidasmeeg.wordpress.com/" target="_blank" rel="noopener">OHBM COBIDAS MEEG</a>
-            committee. Guidelines published in
-            <a href="https://www.nature.com/articles/s41593-020-00709-0" target="_blank" rel="noopener"><em>Nature Neuroscience</em></a>.
-          </p>
-        </div>
-      </li>
-
-      <li class="home-hl-item">
-        <span class="home-hl-year">2020</span>
-        <div class="home-hl-body">
-          <p class="home-hl-text">
-            Genetics metadata extension for BIDS published in
-            <a href="https://academic.oup.com/gigascience/article/9/10/giaa104/5928221" target="_blank" rel="noopener"><em>GigaScience</em></a>.
-          </p>
-        </div>
-      </li>
-
-      <li class="home-hl-item">
-        <span class="home-hl-year">2020</span>
-        <div class="home-hl-body">
-          <p class="home-hl-text">
-            OHBM On-Demand How-To tutorial:
-            <a href="https://www.ohbmbrainmappingblog.com/blog/ohbm-on-demand-how-to-reproducibility-and-good-neuroimaging-practices" target="_blank" rel="noopener">
-              Reproducibility and Good Neuroimaging Practices</a>.
-          </p>
-        </div>
-      </li>
-
-      <li class="home-hl-item">
-        <span class="home-hl-year">2019</span>
-        <div class="home-hl-body">
-          <p class="home-hl-text">
-            Comparison of FreeSurfer (DK/DKT) and BrainSuite parcellation
-            variability published in
-            <a href="https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-019-2609-8" target="_blank" rel="noopener"><em>BMC Bioinformatics</em></a>.
-          </p>
-        </div>
-      </li>
-
-    </ol>
-
-    <p class="home-hl-more">
-      <a href="/research/">Full publication list &rarr;</a>
-    </p>
-  </section>
-
-  <!-- ── CONTACT STRIP ─────────────────────────────────────── -->
-  <section class="home-contact" aria-label="Contact">
-    <div class="home-contact-inner">
-      <div class="home-contact-line">
-        <span class="home-contact-label">Email</span>
-        <a href="mailto:cyril.pernet@nru.dk">cyril.pernet@nru.dk</a>
-      </div>
-      <div class="home-contact-line">
-        <span class="home-contact-label">Address</span>
-        <span>Neurobiology Research Unit, Copenhagen University Hospital
-          Rigshospitalet, Copenhagen, Denmark</span>
-      </div>
-      <div class="home-contact-line">
-        <span class="home-contact-label">Profiles</span>
-        <span class="home-contact-profiles">
-          <a href="https://github.com/CPernet" target="_blank" rel="noopener">GitHub</a>
-          <a href="https://orcid.org/0000-0001-7524-8315" target="_blank" rel="noopener">ORCID</a>
-          <a href="https://scholar.google.co.uk/citations?user=GaFui7UAAAAJ" target="_blank" rel="noopener">Google Scholar</a>
-          <a href="https://twitter.com/CyrilRPernet" target="_blank" rel="noopener">Twitter / X</a>
-          <a href="https://neurostatscyrilpernet.blogspot.com/" target="_blank" rel="noopener">Blog</a>
-        </span>
-      </div>
-    </div>
-  </section>
-
-</div>
+**Profiles:** [GitHub](https://github.com/CPernet) . [ORCID](https://orcid.org/0000-0001-7524-8315) . [Google Scholar](https://scholar.google.co.uk/citations?user=GaFui7UAAAAJ) . [Twitter / X](https://twitter.com/CyrilRPernet) . [Blog](https://neurostatscyrilpernet.blogspot.com/)

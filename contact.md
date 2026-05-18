@@ -2,7 +2,7 @@
 layout: page
 title: Contact
 permalink: /contact/
-description: Contact information for Your Name.
+description: Contact information for Cyril Pernet
 ---
 The best way to reach me is by email.
 

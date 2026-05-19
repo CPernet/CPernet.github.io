@@ -1,6 +1,5 @@
 ﻿---
 layout: page
-title: Dr Cyril Pernet
 description: >-
   Dr Cyril Pernet - Associate Professor, Neurobiology
   Research Unit, Rigshospitalet & Department of Health Teachnology, DTU. Brain imaging methods, open science, reproducibility.

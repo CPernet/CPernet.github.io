@@ -22,14 +22,18 @@ I am an associate professor in translational neuroimaging working at the interse
 
 ## Current Position
 
-**2021 -- present** -- **Senior Research Software Developer**
-[Neurobiology Research Unit](https://www.nru.dk), Copenhagen University Hospital Rigshospitalet, Denmark
+**2026 -- present** -- **Associate Professor**
+[Neurobiology Research Unit](https://www.nru.dk), Copenhagen University Hospital Rigshospitalet & [Departmrnt of Health technology](https://www.healthtech.dtu.dk/), DTU, Denmark
 
-Research software engineering for neuroimaging pipelines; leading open-science projects including [OpenNeuroPET](https://openneuropet.github.io/) (international PET imaging collaboration) and [PublicnEUro](https://public-neuro.github.io/) (EU platform for neuroimaging data sharing).
+Leading methodological and tehnological research project for clinical applicstions, maintaining Open Source projects and managing [PublicnEUro](https://public-neuro.github.io/) (EU platform for neuroimaging data sharing).
 
 ---
 
 ## Employment
+
+**2021 -- present** -- **Senior Research Software Developer**
+[Neurobiology Research Unit](https://www.nru.dk), Copenhagen University Hospital Rigshospitalet, Denmark
+Research software engineering for neuroimaging pipelines; leading open-science projects including [OpenNeuroPET](https://openneuropet.github.io/) (international PET imaging collaboration) and [PublicnEUro](https://public-neuro.github.io/) (EU platform for neuroimaging data sharing).
 
 **2015 -- 2020** -- **Senior Academic Fellow & Functional Imaging Scientific Leader**
 *Edinburgh Imaging, University of Edinburgh, UK*

@@ -29,6 +29,7 @@ All software and teaching materials I produce are freely available.
 
 ## Selected Highlights
 
+- **2026** -- Check our tool to assess privacy in your participants.tsv and other tabular phenotypic data: [MetaprivBIDS](https://github.com/CPernet/metaprivBIDS)
 - **2025** -- [Consensus recommendations for clinical functional MRI applied to language](https://apertureneuro.org/article/128149-consensus-recommendations-for-clinical-functional-mri-applied-to-language-mapping) published in ApertureNeuro -- see also comment in Brain
 - **2024** -- Launch of [PublicnEUro.eu](https://publicneuro.eu/).- **2020** -- Co-chaired the [OHBM COBIDAS MEEG](https://cobidasmeeg.wordpress.com/) committee. Guidelines published in [*Nature Neuroscience*](https://www.nature.com/articles/s41593-020-00709-0).
 - **2020** -- Genetics metadata extension for BIDS published in [*GigaScience*](https://academic.oup.com/gigascience/article/9/10/giaa104/5928221).

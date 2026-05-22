@@ -15,9 +15,9 @@ Associate professor in translational neuroimaging working at the intersection of
 ## Current Position
 
 **2026 -- present** -- **Associate Professor**
-[Neurobiology Research Unit](https://www.nru.dk), Copenhagen University Hospital Rigshospitalet & [Departmrnt of Health technology](https://www.healthtech.dtu.dk/), DTU, Denmark
+[Neurobiology Research Unit](https://www.nru.dk), Copenhagen University Hospital Rigshospitalet & [Department of Health Technology](https://www.healthtech.dtu.dk/), DTU, Denmark
 
-Leading methodological and tehnological research projects for clinical applications, maintaining Open Source projects and managing [PublicnEUro](https://public-neuro.github.io/) (EU platform for neuroimaging data sharing).
+Leading methodological and technological research projects for clinical applications, maintaining Open Source projects and managing [PublicnEUro](https://public-neuro.github.io/) (EU platform for neuroimaging data sharing).
 
 ---
 ## Education
@@ -50,7 +50,7 @@ GDPR-compliant consent templates for open neuroimaging data sharing.
 Organisation for Human Brain Mapping committee on best practices for M/EEG. Guidelines published in [*Nature Neuroscience* (2020)](https://www.nature.com/articles/s41593-020-00709-0).
 
 **2018 -- present** -- **[Brain Imaging Data Structure (BIDS)](https://bids.neuroimaging.io/)**
-Past steering group, colead for [EEG extension](https://www.nature.com/articles/s41597-019-0104-8) lead, lead the [Genetics extension (GigaScience, 2020)](https://academic.oup.com/gigascience/article/9/10/giaa104/5928221), contribute the various BEPs. International standard for organising neuroimaging data.
+Past steering group, co-lead for [EEG extension](https://www.nature.com/articles/s41597-019-0104-8), lead the [Genetics extension (GigaScience, 2020)](https://academic.oup.com/gigascience/article/9/10/giaa104/5928221), contribute the various BEPs. International standard for organising neuroimaging data.
 
 **2015 -- 2020** -- **Data Science Advisor**
 BRAINS (Brain Images of Normal Subjects) and ENBIT (European Network for Brain Imaging of Tumours).

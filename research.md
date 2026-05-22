@@ -31,7 +31,7 @@ Related: [LIMO MEEG](/software/) · [SPMup](/software/) ·
 
 ### Brain Structure, Function, Cognition & Diseases
 
-I have broad interest in cognition, in particluar categorization processes (language, voices, faces, objects, ..), and altered cognitive performance in diseases (dyslexia, epilepsy, brain tumors, psychiatric disorders).
+I have broad interest in cognition, in particular categorization processes (language, voices, faces, objects, ..), and altered cognitive performance in diseases (dyslexia, epilepsy, brain tumors, psychiatric disorders).
 
 ---
 

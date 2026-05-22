@@ -6,7 +6,6 @@ description: >-
   Lecture slides, tutorials, and open educational resources in fMRI, M/EEG,
   statistics, and digital signal processing — by Dr Cyril Pernet.
 ---
-
 Lecture slides, tutorials, and notes developed over 15+ years of teaching at
 summer schools, workshop courses, and university courses. All slides are freely
 available. Topics span fMRI design and analysis, M/EEG signal processing and
@@ -29,34 +28,6 @@ knowledge of how MRI works — see the
 - [fMRI Preprocessing](https://drive.google.com/file/d/1i85D-1me4ufZO2KDkJa2TZU2plqm1O9n/view?usp=sharing){: target="_blank"}
 - [fMRI Statistics and Inference](https://drive.google.com/file/d/1rLRagQAcDN0n4VVm-_x-ATAoco01vD_b/view?usp=sharing){: target="_blank"}
 - [fMRI Connectivity](https://drive.google.com/file/d/17FhMKOsqsUAx1TBEOwfoFbiiMUlZ-8tv/view?usp=sharing){: target="_blank"}
-
-### Experimental Design Notes
-
-Functional MRI designs are more constrained than behavioural experiments because we
-must think simultaneously about experimental effects and fMRI acquisition parameters.
-Three broad families of design exist:
-
-**Block designs** are powerful for detection — localising regions that respond
-differentially to a condition. Blocks of ~16 s optimise the trade-off between BOLD
-signal strength and noise at typical acquisition frequencies; shorter blocks do not
-allow the response to return to baseline, reducing contrast.
-
-**Event-related designs** allow estimation of the haemodynamic response shape per
-condition and support random stimulus ordering, but have lower detection power than
-blocks. Rapid event-related designs introduce null events to create differential ISI
-overlap, enabling a full characterisation of the response.
-
-**Mixed designs** combine block-level state effects with event-level transient
-responses, enabling study of processes that operate at different timescales.
-
-**Adaptation (carry-over) designs** exploit the BOLD refractory period: if two
-successive stimuli differ in a property coded by a region, the response to the
-second stimulus is less suppressed (fMRI-A). The linear BOLD assumption holds for
-ISI ≥ 4 s; continuous carry-over designs (Aguirre, *NeuroImage*, 2007) extend this
-to continuously changing stimulus streams.
-
-See also: [Design Optimisation](https://drive.google.com/file/d/1kQf2R1cyMYuFzyPACDZJQBHna_W6Ew4n/view?usp=sharing){: target="_blank"}
-(in the SPM archive below).
 
 ### Quality Assurance
 
@@ -161,6 +132,7 @@ filtering EEG to characterising the BOLD noise spectrum.
 ---
 
 ## SPM Edinburgh Course Archive (2010–2019)
+
 {: #spm-archive}
 
 A curated archive of lectures from the Edinburgh SPM course, run annually from
@@ -177,6 +149,7 @@ Dr Jean-Baptiste Poline, Dr Christophe Phillips, Dr Mohamed Seghier, Dr Jason Ta
 **Thank you** to the hundreds of colleagues and students who attended the course.
 
 ### Foundations
+
 {: #foundations}
 
 - [MRI physics: what are we measuring?](https://drive.google.com/file/d/1fY3zgHCAwKK3OYXdnOH83_13OppvG-_H/view?usp=sharing){: target="_blank"}

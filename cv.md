@@ -1,6 +1,6 @@
 ﻿---
 layout: page
-title: CV
+title: Short CV
 permalink: /cv/
 description: >-
   Curriculum vitae of Dr Cyril Pernet -- Associate Professor,
@@ -17,31 +17,7 @@ Associate professor in translational neuroimaging working at the intersection of
 **2026 -- present** -- **Associate Professor**
 [Neurobiology Research Unit](https://www.nru.dk), Copenhagen University Hospital Rigshospitalet & [Departmrnt of Health technology](https://www.healthtech.dtu.dk/), DTU, Denmark
 
-Leading methodological and tehnological research projects for clinical applicstions, maintaining Open Source projects and managing [PublicnEUro](https://public-neuro.github.io/) (EU platform for neuroimaging data sharing).
-
----
-## Employment
-
-**2021 -- 2026**: **Senior Research Software Developer**
-[Neurobiology Research Unit](https://www.nru.dk), Copenhagen University Hospital Rigshospitalet, Denmark
-Research software engineering for neuroimaging pipelines; leading [OpenNeuroPET](https://openneuropet.github.io/) (international PET imaging collaboration) and [PublicnEUro](https://public-neuro.github.io/) (EU platform for neuroimaging data sharing).
-
-**2015 -- 2020**: **Senior Academic Fellow & Functional Imaging Scientific Lead**
-*Edinburgh Imaging, University of Edinburgh, UK*
-Scientific management (~40%) covering data management, study protocols, and hardware/software oversight across three MRI scanners & Research/Teaching (60%) in brain imaging for health and disease.
-
-**2010 -- 2020**: **Academic Fellow & fMRI Scientific Leader**
-*Brain Research Imaging Centre (BRIC), University of Edinburgh, UK*
-
-**2007 -- 2010**: **fMRI Lead for SINAPSE**
-*Brain Research Imaging Centre, University of Edinburgh, UK*
-Scottish Imaging Network: A Platform for Scientific Excellence (SINAPSE).
-
-**2006 -- 2007**: **Post-doctoral Research Assistant**
-*Department of Psychology (Prof. Pascal Belin), University of Glasgow, UK*
-
-**2005 -- 2006**: **Post-doctoral Visiting Fellow**
-*Brain Research Unit, Low Temperature Laboratory (Prof. Riitta Salmelin), Helsinki University of Technology, Finland*
+Leading methodological and tehnological research projects for clinical applications, maintaining Open Source projects and managing [PublicnEUro](https://public-neuro.github.io/) (EU platform for neuroimaging data sharing).
 
 ---
 ## Education
@@ -78,6 +54,13 @@ Past steering group, colead for [EEG extension](https://www.nature.com/articles/
 
 **2015 -- 2020** -- **Data Science Advisor**
 BRAINS (Brain Images of Normal Subjects) and ENBIT (European Network for Brain Imaging of Tumours).
+
+---
+## Citizenship
+- OHBM fellow, Past Chair of the OHBM Committee on Best Practices  
+- Past Steering group member of the Brain Imaging Data Structure (BIDS) working group
+- Member of the International Neuroinformatic Coordinating Facility (INCF) 
+- Permanent guest of the Ethics and Society committee for EBRAINS (the EU neuroscience infrastructure) 
 
 ---
 ## Key Expertise

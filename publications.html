@@ -1293,7 +1293,8 @@ buildTopicSelect();
 //   3. Empty                               (first run)
 (async () => {
   const _defaultAuthor = document.getElementById("author-input").value.trim();
-  const fromJson = await loadFromJsonFile();
+  const isFileProtocol = window.location.protocol === "file:";
+  const fromJson = !isFileProtocol && await loadFromJsonFile();
   if (fromJson) {
     if (!cachedAuthor) cachedAuthor = _defaultAuthor;
     setStatus(
@@ -1305,6 +1306,14 @@ buildTopicSelect();
     setStatus(
       `Restored ${publications.length} publications from browser cache. ` +
       `Click "Fetch publications" to check for new ones.`
+    );
+  } else if (isFileProtocol) {
+    setStatus(
+      `⚠️ Opened as a local file — browsers block <code>fetch()</code> on <code>file://</code> URLs. ` +
+      `To load <code>publications.json</code> automatically, serve the site with ` +
+      `<code>bundle exec jekyll serve</code> and open ` +
+      `<a href="http://localhost:4000/publications.html">http://localhost:4000/publications.html</a>. ` +
+      `Alternatively, use <strong>↑ Import JSON</strong> to load the file manually.`
     );
   }
   applyFilterAndRender();

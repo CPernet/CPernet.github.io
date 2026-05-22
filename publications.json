@@ -274,7 +274,7 @@
       ],
       "firstAuthor": "Pernet CR",
       "lastAuthor": "Fisher PM",
-      "topic": "method",
+      "topic": "book",
       "source": "manual",
       "isFirst": true,
       "isLast": false
@@ -1674,7 +1674,7 @@
       ],
       "firstAuthor": "Pernet CR",
       "lastAuthor": "Pernet CR",
-      "topic": "stats",
+      "topic": "book",
       "source": "manual",
       "isFirst": true,
       "isLast": true,
@@ -2404,7 +2404,7 @@
       ],
       "firstAuthor": "Pernet C",
       "lastAuthor": "Demonet JF",
-      "topic": "other",
+      "topic": "book",
       "source": "manual",
       "isFirst": true,
       "isLast": false

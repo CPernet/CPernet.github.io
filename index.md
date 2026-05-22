@@ -5,7 +5,7 @@ description: >-
   Dr Cyril Pernet - Associate Professor, Neurobiology
   Research Unit, Rigshospitalet & Department of Health Teachnology, DTU. Brain imaging methods, open science, reproducibility.
 ---
-Neurobiology Research Unit, Rigshospitalet & Department of Health Teachnology, DTU
+**Neurobiology Research Unit, Rigshospitalet & Department of Health Teachnology, DTU**
 
 I work at the intersection of neuroscience, statistics, and software engineering. My focus is on open methods and tools for brain imaging: developing reproducible analysis pipelines, contributing to community standards such as [BIDS](https://bids.neuroimaging.io), and making rigorous methods accessible to
 the wider imaging community ([LIMO EEG](https://github.com/LIMO-EEG-Toolbox/limo_meeg) for [EEGLAB](https://sccn.ucsd.edu/eeglab/), [OpenNeuroPET ecosystem](https://openneuropet.github.io/), [PublicnEUro.eu](https://publicneuro.eu/)).

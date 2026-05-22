@@ -214,6 +214,72 @@
       "pages": "2242-2246"
     },
     {
+      "id": "manual_voets2025consensus",
+      "title": "Consensus recommendations for clinical functional MRI applied to language mapping.",
+      "journal": "Aperture Neuro",
+      "year": "2025",
+      "doi": "10.52294/001c.128149",
+      "authors": [
+        "Voets NL",
+        "Ashtari M",
+        "Beckmann C",
+        "Benjamin C",
+        "Benzinger T",
+        "Binder J",
+        "Bizzi A",
+        "Bjornson B",
+        "Chang E",
+        "Douw L",
+        "Gawryluk J",
+        "Geletneky K",
+        "Glasser M",
+        "Haller S",
+        "Jenkinson M",
+        "Jovicich J",
+        "Leuthardt E",
+        "Mian A",
+        "Nichols T",
+        "Parker Jones O",
+        "Pernet C",
+        "Plaha P",
+        "Połczyńska-Bletsos M",
+        "Price C",
+        "Rutten GJ",
+        "Scheel M",
+        "Shimony J",
+        "Sierpowska J",
+        "Williams L",
+        "Talib G",
+        "Zeineh M",
+        "Bartsch A",
+        "Bookheimer S"
+      ],
+      "firstAuthor": "Voets NL",
+      "lastAuthor": "Bookheimer S",
+      "topic": "clinical",
+      "source": "manual",
+      "isFirst": false,
+      "isLast": false,
+      "volume": "5"
+    },
+    {
+      "id": "manual_pernet2025fmriapplications",
+      "title": "Functional MRI: Applications in Cognitive Neuroscience.",
+      "journal": "fMRI Techniques and Protocols (Neuromethods)",
+      "year": "2025",
+      "doi": "10.1007/978-1-0716-4438-6_12",
+      "authors": [
+        "Pernet CR",
+        "Fisher PM"
+      ],
+      "firstAuthor": "Pernet CR",
+      "lastAuthor": "Fisher PM",
+      "topic": "method",
+      "source": "manual",
+      "isFirst": true,
+      "isLast": false
+    },
+    {
       "id": "pm_39671425",
       "pmid": "39671425",
       "title": "When most fMRI connectivity cannot be detected: Insights from time course reliability.",
@@ -871,6 +937,27 @@
       "pages": "163-186"
     },
     {
+      "id": "manual_pernet2022eegrsl",
+      "title": "ElectroEncephaloGraphy robust statistical linear modelling using a single weight per trial.",
+      "journal": "Aperture Neuro",
+      "year": "2022",
+      "doi": "10.52294/2e69f7cc-f061-40ad-ad77-017110464dfd",
+      "authors": [
+        "Pernet CR",
+        "Rousselet G",
+        "Suay-Mas I",
+        "Martinez R",
+        "Wilcox R",
+        "Delorme A"
+      ],
+      "firstAuthor": "Pernet CR",
+      "lastAuthor": "Delorme A",
+      "topic": "method",
+      "source": "manual",
+      "isFirst": true,
+      "isLast": false
+    },
+    {
       "id": "pm_33965167",
       "pmid": "33965167",
       "title": "#EEGManyLabs: Investigating the replicability of influential EEG experiments.",
@@ -1103,6 +1190,51 @@
       "volume": "41",
       "issue": "2",
       "pages": "115-125"
+    },
+    {
+      "id": "pm_33932337",
+      "pmid": "33932337",
+      "title": "Brainhack: developing a culture of open, inclusive, community-driven neuroscience.",
+      "journal": "Neuron",
+      "year": "2021",
+      "doi": "10.1016/j.neuron.2021.04.001",
+      "authors": [
+        "Gau R",
+        "Noble S",
+        "Heuer K",
+        "Bottenhorn KL",
+        "Moreau CA",
+        "Pernet C",
+        "Brainhack Community"
+      ],
+      "firstAuthor": "Gau R",
+      "lastAuthor": "Brainhack Community",
+      "topic": "other",
+      "source": "manual",
+      "isFirst": false,
+      "isLast": false,
+      "volume": "109",
+      "pages": "1769-1775"
+    },
+    {
+      "id": "manual_rousselet2021bootstrap",
+      "title": "The percentile bootstrap: a primer with step-by-step instructions in R.",
+      "journal": "Advances in Methods and Practices in Psychological Science",
+      "year": "2021",
+      "doi": "10.1177/2515245920911881",
+      "authors": [
+        "Rousselet GA",
+        "Pernet CR",
+        "Wilcox RR"
+      ],
+      "firstAuthor": "Rousselet GA",
+      "lastAuthor": "Wilcox RR",
+      "topic": "stats",
+      "source": "manual",
+      "isFirst": false,
+      "isLast": false,
+      "volume": "4",
+      "issue": "1"
     },
     {
       "id": "pm_33068112",
@@ -1533,6 +1665,40 @@
       "pages": "348-364"
     },
     {
+      "id": "manual_pernet2018glm",
+      "title": "The General Linear Model: theory and practicalities in brain morphometric analyses.",
+      "journal": "Brain Morphometry: Methods and Clinical Applications (Neuromethods, vol. 136)",
+      "year": "2018",
+      "authors": [
+        "Pernet CR"
+      ],
+      "firstAuthor": "Pernet CR",
+      "lastAuthor": "Pernet CR",
+      "topic": "stats",
+      "source": "manual",
+      "isFirst": true,
+      "isLast": true,
+      "pages": "75-85"
+    },
+    {
+      "id": "manual_wilcox2018skipped",
+      "title": "Improved methods for making inferences about multiple skipped correlations.",
+      "journal": "Journal of Statistical Computation and Simulation",
+      "year": "2018",
+      "doi": "10.1080/00949655.2018.1490208",
+      "authors": [
+        "Wilcox R",
+        "Rousselet GA",
+        "Pernet CR"
+      ],
+      "firstAuthor": "Wilcox R",
+      "lastAuthor": "Pernet CR",
+      "topic": "stats",
+      "source": "manual",
+      "isFirst": false,
+      "isLast": true
+    },
+    {
       "id": "pm_28232121",
       "pmid": "28232121",
       "title": "Improving data availability for brain image biobanking in healthy subjects: Practice-based suggestions from an international multidisciplinary working group.",
@@ -1704,6 +1870,34 @@
       "pages": "37-42"
     },
     {
+      "id": "pm_26586578",
+      "pmid": "26586578",
+      "title": "The role of Brain Derived Neurotrophic Factor in learned fear processing: an awake rat fMRI study.",
+      "journal": "Genes, Brain and Behavior",
+      "year": "2016",
+      "doi": "10.1111/gbb.12277",
+      "authors": [
+        "Fitch A",
+        "Lennen RJ",
+        "Brydges N",
+        "Jansen M",
+        "Pernet C",
+        "Sibley H",
+        "Marshall I",
+        "Baker S",
+        "Basso A",
+        "Day M",
+        "Holmes M",
+        "Hall J"
+      ],
+      "firstAuthor": "Fitch A",
+      "lastAuthor": "Hall J",
+      "topic": "cog-neuro",
+      "source": "manual",
+      "isFirst": false,
+      "isLast": false
+    },
+    {
       "id": "pm_29067159",
       "pmid": "29067159",
       "title": "Null hypothesis significance testing: a short tutorial.",
@@ -1819,6 +2013,48 @@
       "isLast": false,
       "volume": "4",
       "pages": "15"
+    },
+    {
+      "id": "pm_25128255",
+      "pmid": "25128255",
+      "title": "Cluster-based computational methods for mass univariate analyses of event-related brain potentials/fields: A simulation study.",
+      "journal": "Journal of Neuroscience Methods",
+      "year": "2015",
+      "doi": "10.1016/j.jneumeth.2014.08.003",
+      "authors": [
+        "Pernet CR",
+        "Latinus M",
+        "Nichols TE",
+        "Rousselet GA"
+      ],
+      "firstAuthor": "Pernet CR",
+      "lastAuthor": "Rousselet GA",
+      "topic": "method",
+      "source": "manual",
+      "isFirst": true,
+      "isLast": false,
+      "volume": "250",
+      "pages": "85-93"
+    },
+    {
+      "id": "pm_26315443",
+      "pmid": "26315443",
+      "title": "Estimating the reproducibility of psychological science.",
+      "journal": "Science",
+      "year": "2015",
+      "doi": "10.1126/science.aac4716",
+      "authors": [
+        "Open Science Collaboration"
+      ],
+      "firstAuthor": "Open Science Collaboration",
+      "lastAuthor": "Open Science Collaboration",
+      "topic": "method",
+      "source": "manual",
+      "isFirst": false,
+      "isLast": false,
+      "volume": "349",
+      "issue": "6251",
+      "pages": "aac4716"
     },
     {
       "id": "pm_25565951",
@@ -2156,6 +2392,48 @@
       "isLast": false,
       "volume": "3",
       "pages": "23"
+    },
+    {
+      "id": "manual_pernet2012dyslexia",
+      "title": "A multifactorial approach to dyslexia.",
+      "journal": "Developmental Dyslexia: Early Precursors, Neurobehavioral Markers and Biological Substrates (Brookes Publishing Co.)",
+      "year": "2012",
+      "authors": [
+        "Pernet C",
+        "Demonet JF"
+      ],
+      "firstAuthor": "Pernet C",
+      "lastAuthor": "Demonet JF",
+      "topic": "other",
+      "source": "manual",
+      "isFirst": true,
+      "isLast": false
+    },
+    {
+      "id": "pm_22285025",
+      "pmid": "22285025",
+      "title": "Neural dissociation of phonological and visual attention span disorders in developmental dyslexia: FMRI evidence from two case reports.",
+      "journal": "Brain and Language",
+      "year": "2012",
+      "doi": "10.1016/j.bandl.2011.11.007",
+      "authors": [
+        "Peyrin C",
+        "Lanier M",
+        "Demonet JF",
+        "Pernet C",
+        "Baciu M",
+        "Le Bas JF",
+        "Valdois S"
+      ],
+      "firstAuthor": "Peyrin C",
+      "lastAuthor": "Valdois S",
+      "topic": "clinical",
+      "source": "manual",
+      "isFirst": false,
+      "isLast": false,
+      "volume": "120",
+      "issue": "3",
+      "pages": "381-394"
     },
     {
       "id": "pm_22144959",
@@ -2576,6 +2854,49 @@
       "pages": "991-7"
     },
     {
+      "id": "pm_17851091",
+      "pmid": "17851091",
+      "title": "Parafoveal-on-foveal and foveal word priming are different processes: Behavioral and neurophysiological evidence.",
+      "journal": "NeuroImage",
+      "year": "2007",
+      "doi": "10.1016/j.neuroimage.2007.07.047",
+      "authors": [
+        "Pernet C",
+        "Uusvuori J",
+        "Salmelin R"
+      ],
+      "firstAuthor": "Pernet C",
+      "lastAuthor": "Salmelin R",
+      "topic": "cog-neuro",
+      "source": "manual",
+      "isFirst": true,
+      "isLast": false,
+      "volume": "38",
+      "pages": "321-330"
+    },
+    {
+      "id": "pm_16777147",
+      "pmid": "16777147",
+      "title": "Lateral masking, levels of processing and stimulus category: A comparative study between normal and dyslexic readers.",
+      "journal": "Neuropsychologia",
+      "year": "2006",
+      "doi": "10.1016/j.neuropsychologia.2006.04.025",
+      "authors": [
+        "Pernet C",
+        "Valdois S",
+        "Celsis P",
+        "Demonet JF"
+      ],
+      "firstAuthor": "Pernet C",
+      "lastAuthor": "Demonet JF",
+      "topic": "clinical",
+      "source": "manual",
+      "isFirst": true,
+      "isLast": false,
+      "volume": "44",
+      "pages": "2374-2385"
+    },
+    {
       "id": "pm_16109492",
       "pmid": "16109492",
       "title": "Selective response to letter categorization within the left fusiform gyrus.",
@@ -2596,6 +2917,28 @@
       "volume": "28",
       "issue": "3",
       "pages": "738-44"
+    },
+    {
+      "id": "pm_16036471",
+      "pmid": "16036471",
+      "title": "The dynamics of language related brain images.",
+      "journal": "Neurocase",
+      "year": "2005",
+      "doi": "10.1080/13554790490896920",
+      "authors": [
+        "Demonet JF",
+        "Pernet C",
+        "Kouider S",
+        "Musso M"
+      ],
+      "firstAuthor": "Demonet JF",
+      "lastAuthor": "Musso M",
+      "topic": "cog-neuro",
+      "source": "manual",
+      "isFirst": false,
+      "isLast": false,
+      "volume": "11",
+      "pages": "148-150"
     },
     {
       "id": "pm_15133822",
@@ -2619,6 +2962,47 @@
       "volume": "19",
       "issue": "5",
       "pages": "565-71"
+    },
+    {
+      "id": "pm_15275913",
+      "pmid": "15275913",
+      "title": "Anatomy and time course of discrimination and categorization processes in vision: an fMRI study.",
+      "journal": "NeuroImage",
+      "year": "2004",
+      "doi": "10.1016/j.neuroimage.2004.04.020",
+      "authors": [
+        "Pernet C",
+        "Francerie F",
+        "Basan S",
+        "Cassol E",
+        "Demonet JF",
+        "Celsis P"
+      ],
+      "firstAuthor": "Pernet C",
+      "lastAuthor": "Celsis P",
+      "topic": "cog-neuro",
+      "source": "manual",
+      "isFirst": true,
+      "isLast": false,
+      "volume": "22",
+      "pages": "1563-1577"
+    },
+    {
+      "id": "manual_pernet2004constraints",
+      "title": "The constraints of neuroimaging findings on cognitive theories of visual object categorization.",
+      "journal": "Current Psychology of Cognition",
+      "year": "2004",
+      "authors": [
+        "Pernet C"
+      ],
+      "firstAuthor": "Pernet C",
+      "lastAuthor": "Pernet C",
+      "topic": "cog-neuro",
+      "source": "manual",
+      "isFirst": true,
+      "isLast": true,
+      "volume": "22",
+      "pages": "565-610"
     },
     {
       "id": "pm_12880903",

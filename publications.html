@@ -220,7 +220,8 @@
     <h1>Publications</h1>
     <p>
       Auto-fetched from <strong>PubMed</strong> (primary) and <strong>Semantic Scholar</strong> (supplement).
-      You can filter, sort, and manually add, edit, or remove entries below.
+      You can filter, sort, and manually add, edit, or remove entries.
+      After editing, <strong>Export → JSON</strong> and place <code>publications.json</code> next to this page — it will be loaded automatically on the next visit.
     </p>
   </header>
 
@@ -959,7 +960,9 @@ exportMenu.addEventListener("click", e => {
   const list = filtered.length ? filtered : publications;
 
   if (fmt === "json") {
-    triggerDownload(JSON.stringify(list, null, 2), "publications.json", "application/json");
+    // Always export the full dataset (all publications) + tombstones so the
+    // file can serve as a complete restore point when placed next to the page.
+    triggerDownload(JSON.stringify(buildExportObject(), null, 2), "publications.json", "application/json");
 
   } else if (fmt === "apa") {
     const text = list.map((p, i) => `${i + 1}. ${formatAPA(p)}`).join("\n\n");
@@ -999,10 +1002,9 @@ document.getElementById("import-file").addEventListener("change", e => {
   reader.onload = ev => {
     try {
       const data = JSON.parse(ev.target.result);
-      if (!Array.isArray(data)) throw new Error("Expected an array");
-      publications = data;
+      if (!applyImportedData(data)) throw new Error("Expected an array or a publications object");
       commitAndRender();
-      setStatus(`Imported ${data.length} publications.`);
+      setStatus(`Imported ${publications.length} publications.`);
     } catch(err) {
       alert("Could not parse JSON: " + err.message);
     }
@@ -1214,17 +1216,87 @@ document.getElementById("fetch-btn").addEventListener("click", async () => {
   commitAndRender();
 });
 
+// ── JSON-file cache helpers ───────────────────────────────────
+/**
+ * Try to load publications.json from the same directory as the page.
+ * Works when served over HTTP/HTTPS; silently skips when using file://
+ * (cross-origin restriction) or when the file does not exist.
+ * Returns true on success.
+ */
+async function loadFromJsonFile() {
+  try {
+    const res = await fetch("publications.json", { cache: "no-store" });
+    if (!res.ok) return false;
+    const data = await res.json();
+    return applyImportedData(data);
+  } catch (_) {
+    return false;
+  }
+}
+
+/**
+ * Apply loaded data — handles both legacy format (plain array) and the
+ * current format ({ version, publications, tombstones, lastFetch, author }).
+ * Returns true when data was valid and loaded.
+ */
+function applyImportedData(data) {
+  if (Array.isArray(data)) {
+    // Legacy: plain array exported by the old JSON export.
+    publications = data;
+    tombstones   = new Set();
+    return true;
+  }
+  if (data && typeof data === "object" && Array.isArray(data.publications)) {
+    publications = data.publications;
+    tombstones   = new Set(Array.isArray(data.tombstones) ? data.tombstones : []);
+    if (data.lastFetch) document.getElementById("last-fetch").textContent = data.lastFetch;
+    if (data.author)    cachedAuthor = data.author;
+    return true;
+  }
+  return false;
+}
+
+/**
+ * Build the complete export object — the canonical "save file" format.
+ * Always uses the full publications list, not just the current filter.
+ */
+function buildExportObject() {
+  return {
+    version:      1,
+    author:       cachedAuthor || document.getElementById("author-input").value.trim(),
+    lastFetch:    document.getElementById("last-fetch").textContent,
+    publications: publications,
+    tombstones:   [...tombstones]
+  };
+}
+
 // ── Init ───────────────────────────────────────────────────────
 buildChips();
 buildTopicSelect();
 
-// Restore cached list for the default author on page load
-const _defaultAuthor = document.getElementById("author-input").value.trim();
-if (loadFromCache(_defaultAuthor)) {
-  cachedAuthor = _defaultAuthor;
-  setStatus(`Restored ${publications.length} publications from cache. Click "Fetch publications" to check for new ones.`);
-}
-applyFilterAndRender();
+// Startup priority:
+//   1. publications.json next to the page  (primary — used on published site)
+//   2. localStorage (browser cache)        (fallback — used when editing locally
+//                                           without a web server)
+//   3. Empty                               (first run)
+(async () => {
+  const _defaultAuthor = document.getElementById("author-input").value.trim();
+  const fromJson = await loadFromJsonFile();
+  if (fromJson) {
+    if (!cachedAuthor) cachedAuthor = _defaultAuthor;
+    setStatus(
+      `Loaded ${publications.length} publications from <code>publications.json</code>. ` +
+      `Click "Fetch publications" to check for new ones.`
+    );
+  } else if (loadFromCache(_defaultAuthor)) {
+    cachedAuthor = _defaultAuthor;
+    setStatus(
+      `Restored ${publications.length} publications from browser cache. ` +
+      `Click "Fetch publications" to check for new ones.`
+    );
+  }
+  applyFilterAndRender();
+})();
 </script>
 </body>
 </html>

@@ -13,7 +13,8 @@ the wider imaging community ([LIMO EEG](https://github.com/LIMO-EEG-Toolbox/limo
 All software and teaching materials I produce are freely available.
 
 [GitHub](https://github.com/CPernet) .
-[Google Scholar](https://scholar.google.com/citations?user=yz6s_e8AAAAJ&hl=en)
+[Publications](/publications.html) .
+[Google Scholar](https://scholar.google.com/citations?user=yz6s_e8AAAAJ&hl=en) .
 [Contact](/contact/)
 
 ---

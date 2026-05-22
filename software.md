@@ -46,6 +46,15 @@ MATLAB library extending SPM for fMRI quality assurance, data boosting, and adap
 **Tags:** MATLAB, SPM, fMRI, QA
 **Links:** [GitHub](https://github.com/CPernet/spmup)
 
+**Mixture model for single-subject fMRI thresholding**
+
+Gorgolewski, K. et al. (2012). *Frontiers in Human Neuroscience.*
+[doi](https://www.frontiersin.org/articles/10.3389/fnhum.2012.00245/full) · [Code](https://github.com/CPernet/spmup/tree/master/adaptative_threshold)
+
+**BOLD signal decomposition: correcting HRF parameter estimates and computing percentage signal change**
+Pernet, C. R. (2014). *Frontiers in Neuroscience.*
+[doi](https://www.frontiersin.org/articles/10.3389/fnins.2014.00001/full) · [Code](https://github.com/CPernet/spmup/tree/master/hrf)
+
 ---
 
 ## Infrastructure & Standards

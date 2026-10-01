@@ -1439,6 +1439,7 @@ function buildExportObject() {
 // ── Init ───────────────────────────────────────────────────────
 buildChips();
 buildTopicSelect();
+setBusy(false);
 
 // Startup priority:
 //   1. publications.json next to the page  (primary — used on published site)
@@ -1446,6 +1447,7 @@ buildTopicSelect();
 //                                           without a web server)
 //   3. Empty                               (first run)
 (async () => {
+  try {
   const _defaultAuthor = document.getElementById("author-input").value.trim();
   const isFileProtocol = window.location.protocol === "file:";
   const fromJson = !isFileProtocol && await loadFromJsonFile();
@@ -1471,6 +1473,13 @@ buildTopicSelect();
     );
   }
   applyFilterAndRender();
+  } catch (error) {
+    setStatus('Could not finish loading the saved list: ' + escHtml(error.message) +
+      '. You can import JSON or fetch publications.');
+  } finally {
+    initializing = false;
+    setBusy(false);
+  }
 })();
 </script>
 </body>

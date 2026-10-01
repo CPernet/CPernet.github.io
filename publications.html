@@ -221,7 +221,7 @@
   <header class="page-header">
     <h1>Publications</h1>
     <p>
-      Auto-fetched from <strong>PubMed</strong> (primary) and <strong>Semantic Scholar</strong> (supplement).
+      Load your saved list, then fetch updates from <strong>PubMed</strong> and <strong>Semantic Scholar</strong>.
       You can filter, sort, and manually add, edit, or remove entries.
       After editing, <strong>Export → JSON</strong> and place <code>publications.json</code> next to this page — it will be loaded automatically on the next visit.
     </p>
@@ -358,6 +358,19 @@
   </div>
 </div>
 
+<div class="modal-overlay" id="review-overlay" role="dialog" aria-modal="true" aria-labelledby="review-title">
+  <div class="modal" style="width:min(95vw,900px)">
+    <h2 id="review-title">Review fetched changes</h2>
+    <p id="review-summary"></p>
+    <p>New publications and empty-field additions are selected by default. Conflicting values stay unchanged unless selected. Topics and manual records are preserved.</p>
+    <div id="review-items"></div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" id="review-cancel">Discard fetched changes</button>
+      <button class="btn btn-primary" id="review-apply">Apply selected changes</button>
+    </div>
+  </div>
+</div>
+
 <footer>
   <div class="container">
     Publications fetched live from PubMed E-utilities &amp; Semantic Scholar APIs.
@@ -472,6 +485,9 @@ let activeFilter  = "all";
 let editingId     = null;  // null = new entry, string = existing id
 let tombstones    = new Set(); // normalised titles the user deleted
 let cachedAuthor  = "";        // author name currently in cache
+let pendingReview = null;
+let fetching = false;
+let initializing = true;
 
 // ── localStorage helpers ─────────────────────────────────────────
 function storageKey(name) {
@@ -501,13 +517,10 @@ function loadFromCache(name) {
   try {
     const raw = localStorage.getItem(storageKey(name));
     if (!raw) return false;
-    publications = JSON.parse(raw);
     const tombs = localStorage.getItem(tombstoneKey(name));
-    tombstones = new Set(tombs ? JSON.parse(tombs) : []);
-    cachedAuthor = name;
     const fd = localStorage.getItem(storageKey(name) + "_fetchdate");
-    if (fd) document.getElementById("last-fetch").textContent = fd;
-    return true;
+    return applyImportedData({ author: name, publications: JSON.parse(raw),
+      tombstones: tombs ? JSON.parse(tombs) : [], lastFetch: fd || '—' });
   } catch(e) { return false; }
 }
 
@@ -822,7 +835,11 @@ document.getElementById("sort-btn").addEventListener("click", () => {
 function removeEntry(id) {
   if (!confirm("Remove this publication?\n\nThis entry will not come back on re-fetch.")) return;
   const pub = publications.find(p => p.id === id);
-  if (pub) tombstones.add(normTitle(pub.title)); // remember so re-fetch skips it
+  if (pub) {
+    tombstones.add(normTitle(pub.title));
+    if (pub.doi) tombstones.add("doi:" + normDoi(pub.doi));
+    if (pub.pmid) tombstones.add("pmid:" + String(pub.pmid).trim());
+  } // remember so re-fetch skips it
   publications = publications.filter(p => p.id !== id);
   commitAndRender();
 }
@@ -1016,7 +1033,7 @@ document.getElementById("import-file").addEventListener("change", e => {
   reader.onload = ev => {
     try {
       const data = JSON.parse(ev.target.result);
-      if (!applyImportedData(data)) throw new Error("Expected an array or a publications object");
+      if (!applyImportedData(data)) throw new Error("Expected valid publication records with titles and an authors array, in an array or publications object");
       commitAndRender();
       setStatus(`Imported ${publications.length} publications.`);
     } catch(err) {
@@ -1049,7 +1066,7 @@ async function fetchPubMed(authorName) {
     const detail = await fetch(
       `${base}efetch.fcgi?db=pubmed&id=${batch}&retmode=xml`
     );
-    if (!detail.ok) continue;
+    if (!detail.ok) throw new Error("PubMed detail fetch failed (" + detail.status + ")");
     const xml  = await detail.text();
     const parser = new DOMParser();
     const doc  = parser.parseFromString(xml, "text/xml");
@@ -1097,18 +1114,27 @@ async function fetchSemanticScholar(authorName) {
   const authorSearch = await fetch(
     `https://api.semanticscholar.org/graph/v1/author/search?query=${encodeURIComponent(authorName)}&limit=5&fields=name,paperCount`
   );
-  if (!authorSearch.ok) return [];
+  if (!authorSearch.ok) throw new Error("Author search failed (" + authorSearch.status + ")");
   const authorData = await authorSearch.json();
   const author = authorData.data?.[0];
   if (!author) return [];
 
-  const papersRes = await fetch(
-    `https://api.semanticscholar.org/graph/v1/author/${author.authorId}/papers?limit=500&fields=title,year,journal,authors,externalIds`
-  );
-  if (!papersRes.ok) return [];
-  const papersData = await papersRes.json();
+  const papers = [];
+  let offset = 0;
+  do {
+    const papersRes = await fetch(
+      `https://api.semanticscholar.org/graph/v1/author/${author.authorId}/papers?limit=500&offset=${offset}&fields=title,year,journal,authors,externalIds`
+    );
+    if (!papersRes.ok) throw new Error("Paper fetch failed (" + papersRes.status + ")");
+    const papersData = await papersRes.json();
+    papers.push(...(papersData.data || []));
+    const next = papersData.next;
+    if (next == null) break;
+    if (!Number.isInteger(next) || next <= offset) throw new Error('Invalid pagination response');
+    offset = next;
+  } while (true);
 
-  return (papersData.data || []).map(p => {
+  return papers.map(p => {
     const authors = (p.authors || []).map(a => a.name || "");
     const { isFirst, isLast } = computeAuthorFlags(authors);
     const doi = p.externalIds?.DOI || "";
@@ -1131,103 +1157,207 @@ async function fetchSemanticScholar(authorName) {
   });
 }
 
-// ── Merge & deduplicate ────────────────────────────────────────
-/**
- * Merge freshly-fetched records with the existing cached list.
- * Rules:
- *  - Tombstoned titles are never re-added.
- *  - If a fresh record matches an existing one (by PMID or normalised title),
- *    the existing entry wins — preserving manual topic edits, author fixes, etc.
- *    Only missing fields (e.g. DOI) are back-filled.
- *  - Genuinely new records are appended.
- *  - Manual additions (source === 'manual') are always kept.
- */
-function mergeWithExisting(freshList) {
-  const byPmid  = new Map();
-  const byTitle = new Map();
-  for (const p of publications) {
-    if (p.pmid)  byPmid.set(p.pmid, p);
-    byTitle.set(normTitle(p.title), p);
-  }
-
-  let added = 0;
-  for (const p of freshList) {
-    const key = normTitle(p.title);
-    if (tombstones.has(key)) continue;      // user removed this — skip forever
-
-    const existing = (p.pmid && byPmid.get(p.pmid)) || byTitle.get(key);
-    if (existing) {
-      // Back-fill only fields the existing record is missing
-      if (!existing.doi     && p.doi)     existing.doi     = p.doi;
-      if (!existing.pmid    && p.pmid)    existing.pmid    = p.pmid;
-      if (!existing.journal && p.journal) existing.journal = p.journal;
-      if (!existing.volume  && p.volume)  existing.volume  = p.volume;
-      if (!existing.issue   && p.issue)   existing.issue   = p.issue;
-      if (!existing.pages   && p.pages)   existing.pages   = p.pages;
-      // Never overwrite: topic (may be manually set), authors, title, year
-    } else {
-      publications.push(p);
-      byPmid.set(p.pmid, p);
-      byTitle.set(key, p);
-      added++;
-    }
-  }
-  return added;
+// ── Review and merge fetched records ───────────────────────────
+const MERGE_FIELDS = ['title', 'year', 'authors', 'journal', 'volume', 'issue', 'pages', 'doi', 'pmid'];
+function normDoi(value) {
+  return String(value || '').trim().toLowerCase().replace(/^https?:\/\/(?:dx\.)?doi\.org\//, '').replace(/^doi:\s*/, '');
 }
+function fullTitle(value) {
+  return String(value || '').normalize('NFKC').toLowerCase().replace(/[^\p{L}\p{N}]/gu, '');
+}
+function emptyValue(value) {
+  return value == null || (Array.isArray(value) ? value.length === 0 : String(value).trim() === '');
+}
+function equivalent(field, a, b) {
+  if (field === 'doi') return normDoi(a) === normDoi(b);
+  return JSON.stringify(a) === JSON.stringify(b);
+}
+function matchRecord(record, list) {
+  const doi = normDoi(record.doi);
+  const pmid = String(record.pmid || '').trim();
+  const candidates = list.filter(p =>
+    (doi && normDoi(p.doi) === doi) || (pmid && String(p.pmid || '').trim() === pmid));
+  if (candidates.length > 1) return { ambiguous: true };
+  let existing = candidates[0];
+  if (!existing) {
+    const title = fullTitle(record.title);
+    const titleMatches = list.filter(p => title && fullTitle(p.title) === title &&
+      (!p.year || !record.year || String(p.year) === String(record.year)) &&
+      (!(p.authors || []).length || !(record.authors || []).length ||
+        fullTitle(p.authors[0].trim().split(/\s+/)[0]) === fullTitle(record.authors[0].trim().split(/\s+/)[0])));
+    if (titleMatches.length > 1) return { ambiguous: true };
+    existing = titleMatches[0];
+  }
+  if (existing && ((doi && existing.doi && normDoi(existing.doi) !== doi) ||
+      (pmid && existing.pmid && String(existing.pmid).trim() !== pmid))) {
+    return { ambiguous: true };
+  }
+  return { existing };
+}
+function isDeleted(p) {
+  return tombstones.has(normTitle(p.title)) ||
+    (p.doi && tombstones.has('doi:' + normDoi(p.doi))) ||
+    (p.pmid && tombstones.has('pmid:' + String(p.pmid).trim()));
+}
+function buildMergeReview(fresh) {
+  const items = [];
+  const working = publications.map(p => ({ ...p }));
+  let deleted = 0, unchanged = 0;
+  for (const incoming of fresh) {
+    if (!incoming.title) continue;
+    if (isDeleted(incoming)) { deleted++; continue; }
+    const match = matchRecord(incoming, working);
+    if (match.ambiguous) {
+      items.push({ kind: 'ambiguous', incoming });
+      continue;
+    }
+    if (!match.existing) {
+      const item = { kind: 'new', incoming: { ...incoming }, changes: [] };
+      items.push(item);
+      working.push(item.incoming);
+      continue;
+    }
+    const target = match.existing;
+    // Combine sources for the same new record without silently selecting conflicts.
+    const newItem = items.find(item => item.kind === 'new' && item.incoming === target);
+    const changes = MERGE_FIELDS.filter(field => !emptyValue(incoming[field]) &&
+      !equivalent(field, target[field], incoming[field])).map(field => ({
+        field, before: target[field], after: incoming[field], fill: emptyValue(target[field])
+      }));
+    if (newItem) {
+      for (const change of changes) {
+        if (change.fill) target[change.field] = change.after;
+        else if (!newItem.changes.some(c => c.field === change.field)) newItem.changes.push(change);
+      }
+    } else if (changes.length) {
+      // One review item per record; prefer PubMed when sources disagree.
+      let item = items.find(item => item.kind === 'update' && item.targetId === target.id);
+      if (!item) {
+        item = { kind: 'update', targetId: target.id, incoming, changes: [] };
+        items.push(item);
+      }
+      for (const change of changes) {
+        if (!item.changes.some(c => c.field === change.field)) item.changes.push(change);
+      }
+    } else unchanged++;
+  }
+  return { items, deleted, unchanged };
+}
+function displayValue(value) {
+  return escHtml(Array.isArray(value) ? value.join(', ') : (value || '—'));
+}
+function openReview(review) {
+  pendingReview = review;
+  document.getElementById('review-summary').textContent =
+    review.items.filter(i => i.kind === 'new').length + ' new publications; ' +
+    review.items.filter(i => i.kind === 'update').length + ' publications with changes; ' +
+    review.items.filter(i => i.kind === 'ambiguous').length + ' uncertain matches; ' +
+    review.deleted + ' remembered deletions skipped. ' + review.notice;
+  document.getElementById('review-items').innerHTML = review.items.map((item, index) => {
+    const heading = '<h3 style="font-size:1rem">' + escHtml(item.incoming.title) + '</h3>';
+    if (item.kind === 'ambiguous') return '<section>' + heading +
+      '<p>Conflicting identifiers or multiple possible matches. Skipped; compare and edit manually.</p></section>';
+    const add = item.kind === 'new' ? '<label><input type="checkbox" data-item="' + index +
+      '" data-add checked> Add publication (' + escHtml(item.incoming.source) + ', ' +
+      escHtml(item.incoming.year || 'year unknown') + ')</label><p>' +
+      displayValue(item.incoming.authors) + ' · ' + displayValue(item.incoming.journal) + '</p>' : '';
+    const fields = item.changes.map((change, fieldIndex) => '<p><label><input type="checkbox" data-item="' +
+      index + '" data-change="' + fieldIndex + '" ' + (change.fill ? 'checked' : '') + '> ' +
+      escHtml(change.field) + (change.fill ? ' (fill empty field)' : ' (conflict)') + '</label><br>' +
+      displayValue(change.before) + ' → ' + displayValue(change.after) + '</p>').join('');
+    return '<section style="border-bottom:1px solid #ddd;padding:0.5rem 0">' + heading + add + fields + '</section>';
+  }).join('') || '<p>No changes to apply.</p>';
+  document.getElementById('review-overlay').classList.add('open');
+  document.getElementById('review-cancel').focus();
+}
+function closeReview() {
+  pendingReview = null;
+  document.getElementById('review-overlay').classList.remove('open');
+  setBusy(false);
+  document.getElementById('fetch-btn').focus();
+}
+function setBusy(value) {
+  fetching = value;
+  ['fetch-btn', 'add-btn', 'import-btn', 'author-input'].forEach(id => {
+    document.getElementById(id).disabled = value || initializing;
+  });
+}
+document.getElementById('review-cancel').addEventListener('click', () => {
+  closeReview();
+  setStatus('Fetched changes discarded. Your existing list is unchanged.');
+});
+document.getElementById('review-apply').addEventListener('click', () => {
+  if (!pendingReview) return;
+  const review = pendingReview;
+  let added = 0, updated = 0;
+  review.items.forEach((item, index) => {
+    let target;
+    if (item.kind === 'new') {
+      if (!document.querySelector('[data-item="' + index + '"][data-add]').checked) return;
+      target = { ...item.incoming };
+      if (publications.some(p => p.id === target.id)) target.id = uid();
+      publications.push(target);
+      added++;
+    } else if (item.kind === 'update') target = publications.find(p => p.id === item.targetId);
+    if (!target) return;
+    let changed = false;
+    item.changes.forEach((change, fieldIndex) => {
+      if (document.querySelector('[data-item="' + index + '"][data-change="' + fieldIndex + '"]').checked) {
+        target[change.field] = change.after;
+        changed = true;
+      }
+    });
+    target.firstAuthor = (target.authors || [])[0] || '';
+    target.lastAuthor = (target.authors || []).slice(-1)[0] || '';
+    Object.assign(target, computeAuthorFlags(target.authors || []));
+    if (changed && item.kind === 'update') updated++;
+  });
+  document.getElementById('last-fetch').textContent = review.fetchDate;
+  commitAndRender();
+  closeReview();
+  setStatus('Applied: ' + added + ' added, ' + updated + ' updated. ' + publications.length +
+    ' total. Export → JSON to download your updated list and replace the original file yourself.');
+});
 
 // ── Main fetch handler ─────────────────────────────────────────
-document.getElementById("fetch-btn").addEventListener("click", async () => {
-  const name = document.getElementById("author-input").value.trim();
-  if (!name) { alert("Please enter an author name."); return; }
-
-  // If switching to a different author, save current list first, then load
-  // (or start fresh) for the new name.
-  if (cachedAuthor && cachedAuthor !== name) {
+document.getElementById('fetch-btn').addEventListener('click', async () => {
+  if (fetching || initializing) return;
+  const name = document.getElementById('author-input').value.trim();
+  if (!name) { alert('Please enter an author name.'); return; }
+  if (cachedAuthor && storageKey(cachedAuthor) !== storageKey(name)) {
     saveToCache(cachedAuthor);
+    if (!loadFromCache(name)) {
+      publications = [];
+      tombstones = new Set();
+      document.getElementById('last-fetch').textContent = '—';
+    }
+    activeFilter = 'all';
+    buildChips();
+    applyFilterAndRender();
   }
   cachedAuthor = name;
-
-  // Load cached list for this author (preserves edits across fetches)
-  if (!loadFromCache(name)) {
-    publications = [];
-    tombstones   = new Set();
-  }
-
-  setStatus(`<span class="spinner"></span>Querying PubMed for "${name}"…`);
-  filtered = [];
-  renderTable();
-
-  let pubmed = [], scholar = [];
-
+  setBusy(true);
+  const fresh = [], errors = [];
+  let succeeded = 0;
   try {
-    pubmed = await fetchPubMed(name);
-    setStatus(`<span class="spinner"></span>PubMed: ${pubmed.length} records. Querying Semantic Scholar…`);
-  } catch (e) {
-    setStatus(`⚠ PubMed error: ${e.message}. Trying Semantic Scholar…`);
+    setStatus('<span class="spinner"></span>Querying PubMed for ' + escHtml(name) + '…');
+    try { fresh.push(...await fetchPubMed(name)); succeeded++; }
+    catch (error) { errors.push('PubMed: ' + error.message); }
+    setStatus('<span class="spinner"></span>Querying Semantic Scholar…');
+    try { fresh.push(...await fetchSemanticScholar(name)); succeeded++; }
+    catch (error) { errors.push('Semantic Scholar: ' + error.message); }
+    if (!succeeded) {
+      setStatus('Fetch failed. Existing publications preserved. ' + escHtml(errors.join('; ')));
+      setBusy(false);
+      return;
+    }
+    openReview({ ...buildMergeReview(fresh), fetchDate: new Date().toISOString(),
+      notice: errors.length ? 'Partial results: ' + errors.join('; ') : '' });
+    setStatus('Review fetched changes before applying them. Existing publications remain visible.');
+  } catch (error) {
+    setBusy(false);
+    setStatus('Could not prepare review: ' + escHtml(error.message));
   }
-
-  try {
-    scholar = await fetchSemanticScholar(name);
-  } catch (e) {
-    // non-fatal — PubMed results are still shown
-  }
-
-  // Combine fresh results, deduplicate between PubMed and Scholar first
-  const freshSeen = new Set();
-  const fresh = [];
-  for (const p of [...pubmed, ...scholar]) {
-    const k = normTitle(p.title);
-    if (!freshSeen.has(k)) { freshSeen.add(k); fresh.push(p); }
-  }
-
-  const added = mergeWithExisting(fresh);
-  const fetchDate = new Date().toLocaleString();
-  document.getElementById("last-fetch").textContent = fetchDate;
-  setStatus(
-    `Updated: ${publications.length} total publications ` +
-    `(${added} new since last fetch; your edits and removals preserved).`
-  );
-  commitAndRender();
 });
 
 // ── JSON-file cache helpers ───────────────────────────────────
@@ -1254,17 +1384,39 @@ async function loadFromJsonFile() {
  * Returns true when data was valid and loaded.
  */
 function applyImportedData(data) {
+  const entries = Array.isArray(data) ? data : data?.publications;
+  if (!Array.isArray(entries) || !entries.every(p => p && typeof p === 'object' &&
+      typeof p.title === 'string' && p.title.trim() &&
+      (p.authors === undefined || (Array.isArray(p.authors) && p.authors.every(a => typeof a === 'string'))) &&
+      ['id', 'pmid', 'doi', 'journal', 'volume', 'issue', 'pages', 'topic', 'source'].every(k =>
+        p[k] === undefined || typeof p[k] === 'string') &&
+      (p.year === undefined || typeof p.year === 'string' || typeof p.year === 'number'))) return false;
+  const ids = new Set();
+  const normalized = entries.map(p => {
+    let id = p.id || uid();
+    if (ids.has(id)) id = uid();
+    ids.add(id);
+    const authors = p.authors || [];
+    return { ...p, id, authors, year: String(p.year || ''),
+      firstAuthor: authors[0] || '', lastAuthor: authors.slice(-1)[0] || '',
+      ...computeAuthorFlags(authors) };
+  });
   if (Array.isArray(data)) {
     // Legacy: plain array exported by the old JSON export.
-    publications = data;
+    publications = normalized;
     tombstones   = new Set();
+    cachedAuthor = document.getElementById('author-input').value.trim();
+    document.getElementById('last-fetch').textContent = '—';
     return true;
   }
   if (data && typeof data === "object" && Array.isArray(data.publications)) {
-    publications = data.publications;
+    publications = normalized;
     tombstones   = new Set(Array.isArray(data.tombstones) ? data.tombstones : []);
-    if (data.lastFetch) document.getElementById("last-fetch").textContent = data.lastFetch;
-    if (data.author)    cachedAuthor = data.author;
+    document.getElementById("last-fetch").textContent = typeof data.lastFetch === 'string' ? data.lastFetch : '—';
+    if (typeof data.author === 'string' && data.author.trim()) {
+      cachedAuthor = data.author;
+      document.getElementById("author-input").value = data.author;
+    } else cachedAuthor = document.getElementById('author-input').value.trim();
     return true;
   }
   return false;
